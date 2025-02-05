@@ -1,0 +1,83 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import './Login.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+    //const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:5000';
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://127.0.0.1:5000/api/login", {
+                email,
+                password,
+            });
+
+            // Save the token, name, and role
+            const { token, name, role } = response.data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('name', name);
+            localStorage.setItem('role', role);
+            localStorage.setItem('email',email);
+            // Navigate based on the role
+            if (role === 'Student') {
+                navigate('/home');
+            } else if (role === 'Advisor' || role === 'Tutor') {
+                navigate('/AdminPage');
+            } else {
+                setError('Invalid role');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Login failed');
+        }
+    };
+
+    return (
+        <form onSubmit={handleLogin}>
+            <h1>Sign in to Student Success Hub</h1>
+            <img
+                src="images/PHOTO-2024-11-28-10-59-02 (1).jpg"
+                alt="Student Success Hub"
+                className="login-logo"
+            />
+            <h2>Email</h2>
+            <input
+                type="email"
+                placeholder="Enter your UCT email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+            />
+            <h2>Password</h2>
+            <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
+            {error && <p className="error-message">{error}</p>}
+            <button type="submit">
+                <FontAwesomeIcon icon={faSignInAlt} />
+                Login
+            </button>
+            <br/>
+            <button
+                type="button"
+                className="sign-up-button"
+                onClick={() => navigate('/signup')} // Navigate to SignUp component
+            >
+                Sign Up
+            </button>
+            <a href="#">Forgot password</a>
+        </form>
+    );
+};
+
+export default Login;

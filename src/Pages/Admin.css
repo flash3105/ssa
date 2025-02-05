@@ -1,0 +1,83 @@
+/* Admin container styling */
+.admin-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+/* Title and description */
+.admin-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.admin-description {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Logs container */
+.logs-container {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.logs-title {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+/* Logs table styling */
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.logs-table th, .logs-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.logs-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.logs-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.logs-table tr:hover {
+    background-color: #ddd;
+}
+
+/* Error message */
+.error-message {
+    color: red;
+    font-size: 16px;
+    margin-top: 10px;
+}
+.confirm-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button:hover {
+    background-color: #0056b3;
+}

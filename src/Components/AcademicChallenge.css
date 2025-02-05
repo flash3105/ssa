@@ -1,0 +1,138 @@
+/* Main container */
+.academic-challenge-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Title and description */
+.title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.description {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Section headers */
+.section h2 {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+/* Button container */
+.year-options, .module-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Buttons */
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    justify-content: space-around;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Year buttons */
+.year-button {
+    width: 120px;
+    text-align: center;
+}
+
+/* Module buttons */
+.module-button {
+    width: auto;
+    text-align: center;
+}
+
+/* Selected info section */
+.selected-info {
+    font-size: 18px;
+    color: #333;
+    margin-top: 20px;
+    line-height: 1.5;
+    background-color: #e6f2ff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Media Queries for Tablets */
+@media (max-width: 768px) {
+    .academic-challenge-container {
+        padding: 15px;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+
+    .description {
+        font-size: 16px;
+    }
+
+    .section h2 {
+        font-size: 20px;
+    }
+
+    .button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .year-button {
+        width: 100px;
+    }
+}
+
+/* Media Queries for Phones */
+@media (max-width: 480px) {
+    .academic-challenge-container {
+        padding: 10px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    .section h2 {
+        font-size: 18px;
+    }
+
+    .button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .year-button {
+        width: 80px;
+    }
+}

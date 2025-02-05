@@ -1,0 +1,120 @@
+.home-container {
+    text-align: center;
+    margin: 20px;
+}
+
+.quest h3 {
+    color: green;
+    text-align: center;
+}
+
+/* Welcome message container */
+.welcome-container {
+    text-align: center;
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 800px; /* Restrict the width */
+    background-color: #f9f9f9; /* Subtle background color */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the heading */
+.welcome-container h1 {
+    font-size: 36px; /* Make the title larger */
+    font-weight: 600; /* Slightly bolder text */
+    color: #333; /* Darker color for the title */
+    margin-bottom: 10px; /* Space below the heading */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Styling for the paragraph */
+.welcome-container p {
+    font-size: 18px; /* Slightly smaller text for the paragraph */
+    color: #555; /* Lighter gray color for description */
+    line-height: 1.6; /* Increase line height for better readability */
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 20px; /* Space below the paragraph */
+}
+
+/* Create a CSS Grid with 3 columns and 3 rows */
+.tabs-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+    grid-gap: 20px; /* Space between grid items */
+    margin-top: 20px;
+    max-width: 1200px; /* Optional: restrict width */
+    margin: 20px auto; /* Center the grid */
+}
+
+/* Styling for each tab */
+.tab {
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for the tabs */
+.tab:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the tab images */
+.tab img {
+    width: 100%; /* Ensure the image covers the tab area */
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Tab titles */
+.tab h3 {
+    font-size: 18px;
+    color: black;
+}
+
+.tab a {
+    text-decoration: none; /* Remove the underline */
+}
+
+/* For smaller screens: Adjust to 2 columns */
+@media (max-width: 768px) {
+    .tabs-container {
+        grid-template-columns: 1fr 1fr; /* 2 columns on smaller screens */
+    }
+
+    .welcome-container h1 {
+        font-size: 28px; /* Adjust title size for tablets */
+    }
+
+    .welcome-container p {
+        font-size: 16px; /* Adjust paragraph size for tablets */
+    }
+
+    .tab {
+        padding: 15px; /* Reduce padding for smaller screens */
+    }
+}
+
+/* For very small screens: Adjust to 1 column */
+@media (max-width: 480px) {
+    .tabs-container {
+        grid-template-columns: 1fr; /* 1 column on very small screens */
+    }
+
+    .welcome-container h1 {
+        font-size: 24px; /* Adjust title size for phones */
+    }
+
+    .welcome-container p {
+        font-size: 14px; /* Adjust paragraph size for phones */
+    }
+
+    .tab {
+        padding: 10px; /* Further reduce padding for very small screens */
+    }
+}

@@ -1,0 +1,95 @@
+/* Main container for the problems page */
+.problems-container {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Styling for the heading and paragraph */
+.problems-container h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.problems-container p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.6; /* Better readability */
+}
+
+/* Categories container grid */
+.categories-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 20px; /* Spacing between grid items */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Each category tab */
+.category-tab {
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for category tabs */
+.category-tab:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #e6f2ff; /* Light blue background */
+}
+
+/* Title inside category tab */
+.category-tab h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    margin: 0;
+}
+
+/* Responsive design for tablets */
+@media (max-width: 768px) {
+    .categories-container {
+        grid-template-columns: 1fr; /* Stack tabs vertically on smaller screens */
+    }
+
+    .problems-container h1 {
+        font-size: 28px; /* Adjust title size for tablets */
+    }
+
+    .problems-container p {
+        font-size: 16px; /* Adjust paragraph size for tablets */
+    }
+}
+
+/* Responsive design for phones */
+@media (max-width: 480px) {
+    .categories-container {
+        grid-template-columns: 1fr; /* Stack tabs vertically on very small screens */
+    }
+
+    .problems-container h1 {
+        font-size: 24px; /* Adjust title size for phones */
+    }
+
+    .problems-container p {
+        font-size: 14px; /* Adjust paragraph size for phones */
+    }
+
+    .category-tab {
+        padding: 15px; /* Reduce padding for smaller screens */
+    }
+}

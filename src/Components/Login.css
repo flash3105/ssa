@@ -1,0 +1,147 @@
+/* General Form Styling */
+form {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 50px;
+    background-color: white;
+    border: 2px solid rgb(0, 247, 255);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Headings */
+form h1 {
+    font-size: 20px;
+    color: black;
+    margin-bottom: 10px;
+    text-align: center;
+}
+form h2 {
+    font-size: 18px;
+    color: black;
+    margin-bottom: 10px;
+}
+
+/* Input Fields */
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Error Message */
+form p {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Resizing the logo */
+.login-logo {
+    width: 100px; /* Set desired width */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Button with Icon */
+form button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: darkblue;
+}
+
+form button svg {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+/* Forgot Password Link */
+form a {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    color: blue;
+    text-decoration: none;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+
+/* Media Queries for Tablets */
+@media (max-width: 768px) {
+    form {
+        padding: 30px;
+    }
+
+    form h1 {
+        font-size: 18px;
+    }
+
+    form h2 {
+        font-size: 16px;
+    }
+
+    form input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    form button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .login-logo {
+        width: 80px;
+    }
+}
+
+/* Media Queries for Phones */
+@media (max-width: 480px) {
+    form {
+        padding: 20px;
+    }
+
+    form h1 {
+        font-size: 16px;
+    }
+
+    form h2 {
+        font-size: 14px;
+    }
+
+    form input {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    form button {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .login-logo {
+        width: 60px;
+    }
+}
