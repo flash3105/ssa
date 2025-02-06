@@ -12,6 +12,7 @@ import MentalHealth from './Components/MentalHealth.js';
 import CareerGuidance from './Components/CareerGuidance.js';
 import FinancialAid from './Components/FinancialAid.js';
 import AdministrativeIssues from './Components/AdministrativeIssues.js';
+import Survery from './Components/Survery.js';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/AdminPage" element={<AdminPage />} />
           <Route path="/problems" element={<Problems />} />
           <Route path="/SignUp" element={<SignUp/>}/>
+          <Route path="/survery" element={<Survery/>}/>
           <Route path="/Bookings" element={<Bookings/>}/>
           {/* Dynamic routes for problem categories */}
           <Route path="/academic-challenge" element={<AcademicChallenge />} />

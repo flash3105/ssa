@@ -115,7 +115,10 @@ const AdminDashboard = () => {
                                     <td>{log.status}</td>
                                     <td>
                                         <button onClick={() => handleStatusChange(log.id, 'approved', 'logs')}>Approve</button>
-                                        <button onClick={() => handleStatusChange(log.id, 'rejected', 'logs')}>Reject</button>
+                                   
+                                    </td>
+                                    <td>
+                                    <button onClick={() => handleStatusChange(log.id, 'rejected', 'logs')}>Reject</button>
                                     </td>
                                 </tr>
                             ))}
@@ -147,8 +150,13 @@ const AdminDashboard = () => {
                                     <td>{appt.status}</td>
                                     <td>
                                         <button onClick={() => handleStatusChange(appt._id, 'confirmed', 'appoint')}>Confirm</button>
-                                        <button onClick={() => handleStatusChange(appt._id, 'cancelled', 'appoint')}>Cancel</button>
+                                        
+
                                     </td>
+                                    <td>
+                                    <button onClick={() => handleStatusChange(appt._id, 'cancelled', 'appoint')}>Cancel</button>
+                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>

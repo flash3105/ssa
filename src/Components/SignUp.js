@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const SignUp = () => {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
+    const [studentNo,setStudentNo] = useState('');
     const [role, setRole] = useState('Student'); // Default role is Student
     const [department, setDepartment] = useState('Civil Engineering'); // Default department
     const [email, setEmail] = useState('');
@@ -20,12 +21,16 @@ const SignUp = () => {
             await axios.post('http://127.0.0.1:5000/api/register', {
                 name: `${name} ${surname}`,
                 role,
+                studentNo,
                 department,
                 email,
                 password,
             });
+            localStorage.setItem('name', name);
+            localStorage.setItem('department', department);
+            localStorage.setItem('studentNo', studentNo);
             setSuccess(true);
-            setTimeout(() => navigate('/'), 3000); // Redirect to login after 3 seconds
+            setTimeout(() => navigate('/survery'), 3000); // Redirect to login after 3 seconds
         } catch (err) {
             setError(err.response?.data?.message || 'Sign-Up failed');
         }
@@ -46,6 +51,13 @@ const SignUp = () => {
                 placeholder="Enter your surname"
                 value={surname}
                 onChange={(e) => setSurname(e.target.value)}
+                required
+            />
+              <input
+                type="text"
+                placeholder="Enter your Student No. or EMPLID"
+                value={studentNo}
+                onChange={(e) => setStudentNo(e.target.value)}
                 required
             />
             <label>Role</label>

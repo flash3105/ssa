@@ -34,6 +34,7 @@ JWT_SECRET = os.getenv("JWT_SECRET", "your_jwt_secret_key")
 def register():
     data = request.json
     name = data.get('name')
+    studentNo = data.get('studentNo')
     department = data.get('department')
     email = data.get('email')
     password = data.get('password')
@@ -117,9 +118,9 @@ def submit_log():
         "BookedTime":data.get("time"),
         "timestamp": datetime.utcnow().isoformat(),
         "advisor_email": data.get("advisor_email"),
-        "confirmed": null,
-        "status": null,
-        "venue":null
+        "confirmed": None,
+        "status": None,
+        "venue":None
             # Assign logs to a specific advisor
     }
     db.logs.insert_one(log)  # Save the log to the database
@@ -212,6 +213,48 @@ def protected():
         return jsonify({"message": "Token has expired"}), 401
     except jwt.InvalidTokenError:
         return jsonify({"message": "Invalid token"}), 401
+    
+
+@app.route('/api/saveSurvey', methods=['POST'])
+def save_survey():
+    try:
+        # Get the data from the frontend (JSON data sent in the body of the POST request)
+        survey_data = request.get_json()
+
+        # Validate the required fields (check if they exist or are not empty)
+        if not survey_data.get("courseChallenges") or not survey_data.get("emotionalState"):
+            return jsonify({"error": "Please fill in all required fields"}), 400
+        
+        # Prepare the survey data to be inserted into MongoDB
+        survey_document = {
+            "courseChallenges": survey_data.get("courseChallenges"),
+            "needsTutor": survey_data.get("needsTutor"),
+            "needsStudyBuddy": survey_data.get("needsStudyBuddy"),
+            "overwhelmed": survey_data.get("overwhelmed"),
+            "emotionalState": survey_data.get("emotionalState"),
+            "needsMentor": survey_data.get("needsMentor"),
+            "needsCounselor": survey_data.get("needsCounselor"),
+            "careerSupport": survey_data.get("careerSupport"),
+            "internshipInterest": survey_data.get("internshipInterest"),
+            "financialSupport": survey_data.get("financialSupport"),
+            "financialAidHelp": survey_data.get("financialAidHelp"),
+            "peerNetwork": survey_data.get("peerNetwork"),
+            "departmentGroup": survey_data.get("departmentGroup"),
+            "studentAmbassador": survey_data.get("studentAmbassador"),
+            "preferredCommunication": survey_data.get("preferredCommunication"),
+            "timestamp": datetime.utcnow(),  # Timestamp to indicate when the survey was submitted
+        }
+
+        # Save the survey data to MongoDB (assuming there's a collection called "surveys")
+        db.surveys.insert_one(survey_document)
+
+        # Respond with a success message
+        return jsonify({"message": "Survey submitted successfully!"}), 200
+    
+    except Exception as e:
+        # Catch any unexpected errors and log them
+        print(f"Error saving survey: {e}")
+        return jsonify({"error": "An error occurred while submitting the survey."}), 500
 
 # Run the Flask app
 if __name__ == '__main__':

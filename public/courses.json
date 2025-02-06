@@ -1,0 +1,141 @@
+{
+    "EBE_Courses": {
+      "Civil Engineering": {
+        "1": [
+          "Chemistry for Engineers",
+          "Engineering Mechanics",
+          "Mathematics IA for Engineers Extended",
+          "Mathematics IB for Engineers Extended",
+          "Physics A for ASPECT",
+          "Physics B for ASPECT"
+        ],
+        "2": [
+          "Introduction to Engineering",
+          "Mechanics of Materials",
+          "Structural Analysis I",
+          "Vector Calculus for ASPECT",
+          "Linear Algebra and DEs for Engineers",
+          "Introduction to Engineering Drawing",
+          "Introduction to Mechanical Design"
+        ],
+        "3": [
+          "Construction Surveying",
+          "Geotechnical Engineering I",
+          "Fluid Mechanics",
+          "Construction Materials",
+          "Water Treatment"
+        ],
+        "4": [
+          "Design Project",
+          "Professional Practice",
+          "Waste Water Treatment",
+          "Research Project",
+          "Structural Design II",
+          "Transportation Engineering"
+        ]
+      },
+      "Electrical_Engineering": {
+        "1st_Year": [
+          "Introduction to Electronic Engineering",
+          "Mathematics IA for Engineers Extended",
+          "Physics A for ASPECT",
+          "Introduction to Electrical Engineering",
+          "Mathematics IB for Engineers Extended",
+          "Physics B for ASPECT"
+        ],
+        "2nd_Year": [
+          "Analogue Electronics",
+          "Embedded Systems I",
+          "Professional Communication for Electrical Engineering",
+          "Vector Calculus for Engineers",
+          "Introduction to Power Engineering",
+          "Signals and Systems I",
+          "Project Management",
+          "Electromagnetism for Engineers"
+        ],
+        "3rd_Year": [
+          "Electrical Engineering Design Principles",
+          "Electronic Devices and Circuits",
+          "Energy Conversion",
+          "Signals & Systems II",
+          "Control Systems Engineering",
+          "Embedded Systems II",
+          "Engineering Design: Mechatronics"
+        ],
+        "4th_Year": [
+          "Engineering System Design",
+          "Law for Engineers",
+          "Professional Communication Studies",
+          "New Venture Planning",
+          "Final Year Project",
+          "Microwave Engineering",
+          "Digital Signal Processing"
+        ]
+      },
+      "Mechanical_Engineering": {
+        "1st_Year": [
+          "Mathematics IA for Engineers Extended",
+          "Mathematics IB for Engineers Extended",
+          "Introduction to Mechanical Engineering",
+          "Physics A for ASPECT",
+          "Physics B for ASPECT",
+          "Practical Training I"
+        ],
+        "2nd_Year": [
+          "Chemistry for Engineers",
+          "Introduction to Electrical Engineering & Power Utilisation",
+          "Introduction to Analogue & Digital Electronics",
+          "Vector Calculus for Aspect",
+          "Linear Algebra and DEs for Engineers",
+          "Introduction to Engineering Drawing",
+          "Introduction to Mechanical Design",
+          "Introduction to Engineering Mechanics"
+        ],
+        "3rd_Year": [
+          "Electrical Engineering Design Principles",
+          "Electromagnetic Engineering",
+          "Electronic Devices and Circuits",
+          "Engineering Dynamics",
+          "Applied Engineering Mechanics",
+          "Control Systems Engineering",
+          "Mechatronics"
+        ],
+        "4th_Year": [
+          "Engineering System Design",
+          "Professional Communication Studies",
+          "New Venture Planning",
+          "Industrial Ecology",
+          "Final Year Project"
+        ]
+      },
+      "Chemical_Engineering": {
+        "1st_Year": [
+          "Chemistry 1000",
+          "Chemical Engineering I",
+          "Mathematics IA for Engineers",
+          "Mathematics IB for Engineers",
+          "Physics A for Engineers",
+          "Statistics for Engineers"
+        ],
+        "2nd_Year": [
+          "Field Trip",
+          "Chemical Engineering II",
+          "Vector Calculus for Engineers",
+          "Linear Algebra and DEs for Engineers"
+        ],
+        "3rd_Year": [
+          "Fundamentals of Chemical Engineering III",
+          "Non-ideal systems in Chemical Engineering",
+          "Chemical Engineering Project Management",
+          "Workplace Experience"
+        ],
+        "4th_Year": [
+          "Process Design",
+          "Environmental Engineering",
+          "Chemical Reaction Engineering",
+          "Final Year Project"
+        ]
+      }
+    }
+  }
+  
