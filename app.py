@@ -245,7 +245,7 @@ def save_survey():
             "timestamp": datetime.utcnow(),  # Timestamp to indicate when the survey was submitted
         }
 
-        # Save the survey data to MongoDB (assuming there's a collection called "surveys")
+        # Save the survey data to MongoDB 
         db.surveys.insert_one(survey_document)
 
         # Respond with a success message

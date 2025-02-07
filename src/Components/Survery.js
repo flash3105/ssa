@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Survey.css";
+import {  useNavigate } from "react-router-dom";
 
 const Survey = () => {
+    const navigate = useNavigate();
   const [student, setStudent] = useState({ name: "", studentNumber: "", department: "" });
   const [formData, setFormData] = useState({
     courseChallenges: "",
@@ -56,14 +58,21 @@ const Survey = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+  const handleNext = () => {
+    if (currentStep < 7) {
+      setCurrentStep((prevStep) => prevStep + 1);
+    }
+  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Ensure you're on the last step before submitting
-    if (currentStep === 4 && (!formData.courseChallenges || !formData.emotionalState)) {
+    if (currentStep === 7 && (!formData.courseChallenges || !formData.emotionalState)) {
       alert("Please fill in all the required fields.");
       return;
+     
     }
 
     const surveyData = { ...student, ...formData };
@@ -71,7 +80,7 @@ const Survey = () => {
     try {
       const response = await axios.post("http://127.0.0.1:5000/api/saveSurvey", surveyData);
       if (response.status === 200) {
-        alert("Survey submitted successfully!");
+        
         setFormData({
           courseChallenges: "",
           needsTutor: false,
@@ -89,6 +98,7 @@ const Survey = () => {
           studentAmbassador: false,
           preferredCommunication: "",
         });
+        setTimeout(() => navigate('/'), 2000); // Redirect to login after 3 seconds
       } else {
         alert("Failed to submit survey.");
       }
@@ -98,9 +108,7 @@ const Survey = () => {
     }
   };
 
-  const handleNext = () => {
-    setCurrentStep((prevStep) => prevStep + 1);
-  };
+ 
 
   const handlePrevious = () => {
     setCurrentStep((prevStep) => prevStep - 1);
@@ -193,9 +201,40 @@ const Survey = () => {
             <button type="button" onClick={handleNext}>Next</button>
           </div>
         )}
-
-        {/* Submit */}
         {currentStep === 4 && (
+            <div>
+                    <label>Do you need a mentor for academic or career guidance?</label>
+                    <input type="checkbox" name="needsMentor" onChange={handleChange} />
+                    <label>Would you like career support services?</label>
+                    <input type="checkbox" name="careerSupport" onChange={handleChange} />
+                    <button type="button" onClick={handlePrevious}>Previous</button>
+                    <button type="button" onClick={handleNext}>Next</button>
+            </div>
+        )}
+         {currentStep === 5 && (
+            <div>
+                  <label>Are you interested in internship opportunities?</label>
+                 <input type="checkbox" name="internshipInterest" onChange={handleChange} />
+                 <button type="button" onClick={handlePrevious}>Previous</button>
+                 <button type="button" onClick={handleNext}>Next</button>
+
+            </div>
+        )}
+         {currentStep === 6 && (
+            <div>
+                   <label>Do you need financial support?</label>
+                   <input type="checkbox" name="financialSupport" onChange={handleChange} />
+                   
+                   <label>Would you like help with financial aid applications?</label>
+                   <input type="checkbox" name="financialAidHelp" onChange={handleChange} />
+                   <button type="button" onClick={handlePrevious}>Previous</button>
+                   <button type="button" onClick={handleNext}>Next</button>
+            </div>
+        )}
+         
+       
+        {/* Submit */}
+        {currentStep === 7 && (
           <div>
             <label>Preferred Communication Method:</label>
             <select name="communication" onChange={handleChange}>
@@ -207,6 +246,7 @@ const Survey = () => {
             <button type="submit">Submit</button>
           </div>
         )}
+        
       </form>
     </div>
   );
