@@ -82,6 +82,7 @@ const Survey = () => {
       if (response.status === 200) {
         
         setFormData({
+            studentNumber,
           courseChallenges: "",
           needsTutor: false,
           needsStudyBuddy: false,
