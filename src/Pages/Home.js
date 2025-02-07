@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // FontAwesome icons
 import {
@@ -11,6 +11,7 @@ import {
     faHammer,
     faLeaf,
     faCity,
+    faUserCircle, // Add this import for the profile icon
 } from '@fortawesome/free-solid-svg-icons';
 import './Home.css';
 
@@ -18,6 +19,28 @@ const Home = () => {
     const name = localStorage.getItem('name'); // Retrieve the user's name from localStorage
     const studentNo = localStorage.getItem('studentNo');
     const navigate = useNavigate(); // Hook for navigation
+    const [summary, setSummary] = useState({});
+    const [studentDepartment, setStudentDepartment] = useState('');
+    const [isProfileVisible, setIsProfileVisible] = useState(false);
+
+    // Fetch and set summary from localStorage
+    useEffect(() => {
+        const rawSummary = localStorage.getItem('summary');
+        
+        if (rawSummary) {
+            try {
+                // Parse the summary from localStorage
+                const parsedSummary = JSON.parse(rawSummary);
+                setSummary(parsedSummary);
+                console.log(parsedSummary);
+                // Set the student's department from the summary data
+                setStudentDepartment(parsedSummary.department || '');
+            } catch (error) {
+                console.error("Error parsing summary from localStorage:", error);
+                setSummary(null);
+            }
+        }
+    }, []);
 
     // Function to handle tab click
     const handleTabClick = (department) => {
@@ -26,6 +49,11 @@ const Home = () => {
 
         // Navigate to the "Problems" page
         navigate('/problems');
+    };
+
+    // Function to handle profile icon click (show summary info)
+    const handleProfileClick = () => {
+        setIsProfileVisible(!isProfileVisible);
     };
 
     return (
@@ -40,6 +68,14 @@ const Home = () => {
             </div>
 
             <div className="tabs-container">
+                {/* Display only the tab of the student's department */}
+                {studentDepartment && (
+                    <div className="tab" onClick={() => handleTabClick(studentDepartment)}>
+                        <FontAwesomeIcon icon={faIndustry} className="tab-icon" />
+                        <h3>{studentDepartment}</h3>
+                    </div>
+                )}
+
                 <div className="tab" onClick={() => handleTabClick('Chemical Engineering')}>
                     <FontAwesomeIcon icon={faIndustry} className="tab-icon" />
                     <h3>Chemical Engineering</h3>
@@ -85,6 +121,25 @@ const Home = () => {
                     <h3>Urban</h3>
                 </div>
             </div>
+
+            {/* Profile icon section */}
+            <div className="profile-container">
+                <button className="profile-button" onClick={handleProfileClick}>
+                    <FontAwesomeIcon icon={faUserCircle} className="profile-icon" />
+                </button>
+            </div>
+
+            {/* Sliding form for profile info */}
+            {isProfileVisible && (
+                <div className={`profile-info-form ${isProfileVisible ? 'show' : ''}`}>
+                    <h2>Profile Information</h2>
+                    <p><strong>Department:</strong> {summary.department}</p>
+                    <p><strong>Student No:</strong> {summary.studentNo}</p>
+                    <p><strong>Career Support:</strong> {summary.careerSupport ? "Yes" : "No"}</p>
+                    <p><strong>Course Challenges:</strong> {summary.courseChallenges}</p>
+                    {/* Display other fields as necessary */}
+                </div>
+            )}
         </div>
     );
 };

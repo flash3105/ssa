@@ -43,20 +43,24 @@ const Login = () => {
         }
     };
     
-    // Function to fetch survey summary after login
-    const fetchSurveySummary = async (studentNo, token) => {
-        try {
-            const response = await axios.get(`http://127.0.0.1:5000/api/get_summary/${studentNo}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            console.log(studentNo);
-            localStorage.setItem('summary', response.data.summary);
-            console.log(response.data.summary);
-        } catch (err) {
-            console.error("Error fetching survey summary:", err);
-            localStorage.setItem('summary', 'No summary available');
-        }
-    };
+ // Function to fetch survey summary after login
+const fetchSurveySummary = async (studentNo, token) => {
+    try {
+        const response = await axios.get(`http://127.0.0.1:5000/api/get_summary/${studentNo}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+       
+
+        // Ensure the summary is stringified before storing in localStorage
+        localStorage.setItem('summary', JSON.stringify(response.data.summary));
+
+    } catch (err) {
+        console.error("Error fetching survey summary:", err);
+        localStorage.setItem('summary', 'No summary available');
+    }
+};
+
     
 
     return (
