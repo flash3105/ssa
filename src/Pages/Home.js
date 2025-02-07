@@ -16,6 +16,7 @@ import './Home.css';
 
 const Home = () => {
     const name = localStorage.getItem('name'); // Retrieve the user's name from localStorage
+    const studentNo = localStorage.getItem('studentNo');
     const navigate = useNavigate(); // Hook for navigation
 
     // Function to handle tab click
@@ -31,6 +32,7 @@ const Home = () => {
         <div>
             <div className="welcome-container">
                 <h1>Welcome, {name}!</h1>
+                <h1>{studentNo}</h1>
                 <p>You are successfully logged in to the Student Success Hub.</p>
             </div>
             <div className="quest">

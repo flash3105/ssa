@@ -18,14 +18,19 @@ const Login = () => {
                 email,
                 password,
             });
-
-            // Save the token, name, and role
-            const { token, name, role } = response.data;
+    
+            // Save the token, name, role, and student number
+            const { token, name, role, studentNo } = response.data;
             localStorage.setItem('token', token);
             localStorage.setItem('name', name);
             localStorage.setItem('role', role);
-            localStorage.setItem('email',email);
-            // Navigate based on the role
+            localStorage.setItem('email', email);
+            localStorage.setItem('studentNo', studentNo);
+            console.log(studentNo);
+            // Fetch survey summary separately
+            fetchSurveySummary(studentNo, token);
+    
+            // Navigate based on role
             if (role === 'Student') {
                 navigate('/home');
             } else if (role === 'Advisor' || role === 'Tutor') {
@@ -37,6 +42,22 @@ const Login = () => {
             setError(err.response?.data?.message || 'Login failed');
         }
     };
+    
+    // Function to fetch survey summary after login
+    const fetchSurveySummary = async (studentNo, token) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:5000/api/get_summary/${studentNo}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            console.log(studentNo);
+            localStorage.setItem('summary', response.data.summary);
+            console.log(response.data.summary);
+        } catch (err) {
+            console.error("Error fetching survey summary:", err);
+            localStorage.setItem('summary', 'No summary available');
+        }
+    };
+    
 
     return (
         <form onSubmit={handleLogin}>

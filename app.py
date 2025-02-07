@@ -93,6 +93,7 @@ def login():
         "name": user["name"],
         "email": user["email"],
         "role": user["role"],
+        "studentNo" : user["studentNo"],
         "exp": datetime.utcnow() + timedelta(hours=1)  # Token expires in 1 hour
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
@@ -103,7 +104,8 @@ def login():
         "token": token,
         "name": user["name"],
         "role": user["role"],
-        "email": user["email"]
+        "email": user["email"],
+        "studentNo" : user["studentNo"]
     }), 200
 
 #submit a log 
@@ -258,6 +260,28 @@ def save_survey():
         # Catch any unexpected errors and log them
         print(f"Error saving survey: {e}")
         return jsonify({"error": "An error occurred while submitting the survey."}), 500
+    
+from bson import ObjectId
+
+@app.route('/api/get_summary/<student_number>', methods=['GET'])
+def get_summary(student_number):
+    try:
+        # Retrieve the survey from MongoDB
+        survey = db.surveys.find_one({"studentNo": student_number})
+
+        if not survey:
+            return jsonify({'message': 'No survey summary found'}), 404
+
+        # Convert ObjectId to string
+        survey['_id'] = str(survey['_id'])
+
+        return jsonify({'summary': survey}), 200
+    except Exception as e:
+        print(f"Error retrieving survey summary: {e}")
+        return jsonify({"error": "An error occurred while fetching the summary."}), 500
+
+
+
 
 # Run the Flask app
 if __name__ == '__main__':
