@@ -7,6 +7,7 @@ const Survey = () => {
     const navigate = useNavigate();
   const [student, setStudent] = useState({ name: "", studentNumber: "", department: "" });
   const [formData, setFormData] = useState({
+    studentNumber:localStorage.getItem("studentNo"),
     courseChallenges: "",
     needsTutor: false,
     needsStudyBuddy: false,
@@ -82,7 +83,7 @@ const Survey = () => {
       if (response.status === 200) {
         
         setFormData({
-            studentNumber,
+            studentNumber:localStorage.getItem("studentNo"),
           courseChallenges: "",
           needsTutor: false,
           needsStudyBuddy: false,
@@ -238,7 +239,7 @@ const Survey = () => {
         {currentStep === 7 && (
           <div>
             <label>Preferred Communication Method:</label>
-            <select name="communication" onChange={handleChange}>
+            <select name="preferredCommunication" onChange={handleChange}>
                 <option value="">Select</option>
                 <option value="Physical">Physical</option>
                 <option value="Virtual">Virtual</option>

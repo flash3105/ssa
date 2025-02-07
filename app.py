@@ -33,6 +33,7 @@ JWT_SECRET = os.getenv("JWT_SECRET", "your_jwt_secret_key")
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
+    print(data)
     name = data.get('name')
     studentNo = data.get('studentNo')
     department = data.get('department')
@@ -61,6 +62,7 @@ def register():
     result = users_collection.insert_one({
         "name": name,
         "email": email,
+       "studentNo":studentNo,
         "password": hashed_password.decode('utf-8'),
         "role": role,
         "department": department,
@@ -227,6 +229,7 @@ def save_survey():
         
         # Prepare the survey data to be inserted into MongoDB
         survey_document = {
+            "studentNo" : survey_data.get("studentNumber"),
             "courseChallenges": survey_data.get("courseChallenges"),
             "needsTutor": survey_data.get("needsTutor"),
             "needsStudyBuddy": survey_data.get("needsStudyBuddy"),
