@@ -36,7 +36,7 @@ const Problems = () => {
 
     return (
         <div className="problems-container">
-            <h1>Problems in {selectedDepartment}</h1>
+            <h1>Suggestions for you</h1>
             <p>Select the category of the problem:</p>
 
             <div className="categories-container">

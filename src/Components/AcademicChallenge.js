@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AcademicChallenge.css";
 
@@ -7,31 +6,15 @@ const AcademicChallenge = () => {
     const selectedDepartment = localStorage.getItem("selectedDepartment"); // Retrieve department
     const navigate = useNavigate();
 
-    // States for year of study, selected module, tutors, and advisors
     const [selectedYear, setSelectedYear] = useState(null);
     const [selectedModule, setSelectedModule] = useState(null);
     const [tutors, setTutors] = useState([]);
     const [advisors, setAdvisors] = useState([]);
+    const [departmentModules, setDepartmentModules] = useState([]);
 
-    // Mock data for modules by year and department
-    const departmentModules = {
-        "Chemical Engineering": {
-            1: ["Chemistry Basics", "Introduction to Chemical Engineering", "Mathematics I"],
-            2: ["Fluid Mechanics", "Thermodynamics", "Process Control"],
-            3: ["Mass Transfer", "Heat Transfer", "Reactor Design"],
-            4: ["Process Optimization", "Environmental Engineering", "Plant Design"],
-        },
-        "Electrical Engineering": {
-            1: ["Circuits I", "Digital Logic", "Mathematics I"],
-            2: ["Signals and Systems", "Electromagnetic Fields", "Electronics I"],
-            3: ["Power Systems", "Control Systems", "Electronics II"],
-            4: ["Embedded Systems", "Energy Conversion", "Communication Systems"],
-        },
-    };
-
-    // Mock data for tutors and advisors (name paired with email)
+    // Declare DepTutors and DepAdvisors inside the component
     const DepTutors = {
-        "Chemistry Basics": [
+        "Chemistry for Engineers": [
             { name: "Sihle Nduna", email: "sihle.nduna@example.com" },
             { name: "Jabu Wala", email: "jabu.wala@example.com" },
             { name: "Steve Van Wijk", email: "steve.vanwijk@example.com" },
@@ -53,26 +36,35 @@ const AcademicChallenge = () => {
         ],
     };
 
-    // Handle selecting a year
+    useEffect(() => {
+        // Fetch courses.json from the public folder
+        fetch("/courses.json")
+            .then((response) => response.json())
+            .then((data) => {
+                const departmentCourses = data.EBE_Courses[selectedDepartment];
+                if (departmentCourses) {
+                    setDepartmentModules(departmentCourses);
+                }
+            })
+            .catch((error) => console.error("Error fetching courses.json:", error));
+    }, [selectedDepartment]);
+
     const handleYearClick = (year) => {
         setSelectedYear(year);
         localStorage.setItem("selectedYear", year);
         setSelectedModule(null); // Reset module selection
     };
 
-    // Handle selecting a module
     const handleModuleClick = async (module) => {
         setSelectedModule(module);
         setTutors(DepTutors[module] || []);
         setAdvisors(DepAdvisors[selectedDepartment] || []);
         localStorage.setItem("selectedModule", module);
-       
     };
 
-    // Handle booking an appointment
     const handleBookingClick = (name, email, type) => {
         console.log(`Booking appointment with ${type}: ${name}`);
-        localStorage.setItem("AdminName",name);
+        localStorage.setItem("AdminName", name);
         localStorage.setItem("selectedTutorOrAdvisor", email);
         navigate("/bookings");
     };
@@ -107,7 +99,7 @@ const AcademicChallenge = () => {
                 <div className="section">
                     <h2>Year {selectedYear}: Select a Module</h2>
                     <div className="module-options">
-                        {departmentModules[selectedDepartment]?.[selectedYear]?.map((module) => (
+                        {departmentModules[selectedYear]?.map((module) => (
                             <button
                                 key={module}
                                 onClick={() => handleModuleClick(module)}
