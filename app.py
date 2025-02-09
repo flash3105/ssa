@@ -232,6 +232,7 @@ def save_survey():
         # Prepare the survey data to be inserted into MongoDB
         survey_document = {
             "studentNo" : survey_data.get("studentNumber"),
+            "department" : survey_data.get("department"),
             "courseChallenges": survey_data.get("courseChallenges"),
             "needsTutor": survey_data.get("needsTutor"),
             "needsStudyBuddy": survey_data.get("needsStudyBuddy"),

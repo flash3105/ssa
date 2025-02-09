@@ -8,6 +8,7 @@ const Survey = () => {
   const [student, setStudent] = useState({ name: "", studentNumber: "", department: "" });
   const [formData, setFormData] = useState({
     studentNumber:localStorage.getItem("studentNo"),
+    department : localStorage.getItem("department"),
     courseChallenges: "",
     needsTutor: false,
     needsStudyBuddy: false,

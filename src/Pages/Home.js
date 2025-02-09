@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // FontAwesome icons
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faIndustry,
     faBolt,
@@ -11,49 +11,95 @@ import {
     faHammer,
     faLeaf,
     faCity,
-    faUserCircle, // Add this import for the profile icon
+    faUserCircle,
+    faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import './Home.css';
 
 const Home = () => {
-    const name = localStorage.getItem('name'); // Retrieve the user's name from localStorage
+    const name = localStorage.getItem('name');
     const studentNo = localStorage.getItem('studentNo');
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
     const [summary, setSummary] = useState({});
     const [studentDepartment, setStudentDepartment] = useState('');
     const [isProfileVisible, setIsProfileVisible] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Fetch and set summary from localStorage
+    const departmentIcons = {
+        'Chemical Engineering': faIndustry,
+        'Electrical Engineering': faBolt,
+        'Mechanical Engineering': faWrench,
+        'Civil Engineering': faBuilding,
+        'Architectural Studies': faDraftingCompass,
+        'Geomatics': faGlobe,
+        'Construction': faHammer,
+        'Environmental': faLeaf,
+        'Urban': faCity,
+    };
+
     useEffect(() => {
         const rawSummary = localStorage.getItem('summary');
-        
         if (rawSummary) {
             try {
-                // Parse the summary from localStorage
                 const parsedSummary = JSON.parse(rawSummary);
                 setSummary(parsedSummary);
-                console.log(parsedSummary);
-                // Set the student's department from the summary data
                 setStudentDepartment(parsedSummary.department || '');
             } catch (error) {
                 console.error("Error parsing summary from localStorage:", error);
-                setSummary(null);
             }
         }
     }, []);
-
-    // Function to handle tab click
+    console.log(summary);
     const handleTabClick = (department) => {
-        // Log the department to local storage or backend
         localStorage.setItem('selectedDepartment', department);
-
-        // Navigate to the "Problems" page
         navigate('/problems');
     };
 
-    // Function to handle profile icon click (show summary info)
     const handleProfileClick = () => {
         setIsProfileVisible(!isProfileVisible);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setSummary((prevSummary) => ({
+            ...prevSummary,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    const handleSaveProfile = async () => {
+        setIsSaving(true);
+        setError(null);
+
+        try {
+            // Ensure there is an ID before making the request
+            if (!summary.id) {
+                throw new Error("Summary ID missing. Unable to save.");
+            }
+
+            const response = await fetch(`https://api.example.com/surveysave/${summary.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(summary),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to save: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            localStorage.setItem('summary', JSON.stringify(summary)); 
+            alert("Profile updated successfully!");
+
+        } catch (err) {
+            console.error("Error saving profile:", err);
+            setError(err.message);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -64,62 +110,16 @@ const Home = () => {
                 <p>You are successfully logged in to the Student Success Hub.</p>
             </div>
             <div className="quest">
-                <h3>Choose your Major: </h3>
+                <h3>Your department: </h3>
             </div>
 
             <div className="tabs-container">
-                {/* Display only the tab of the student's department */}
-                {studentDepartment && (
+                {studentDepartment && departmentIcons[studentDepartment] && (
                     <div className="tab" onClick={() => handleTabClick(studentDepartment)}>
-                        <FontAwesomeIcon icon={faIndustry} className="tab-icon" />
+                        <FontAwesomeIcon icon={departmentIcons[studentDepartment]} className="tab-icon" />
                         <h3>{studentDepartment}</h3>
                     </div>
                 )}
-
-                <div className="tab" onClick={() => handleTabClick('Chemical Engineering')}>
-                    <FontAwesomeIcon icon={faIndustry} className="tab-icon" />
-                    <h3>Chemical Engineering</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Electrical Engineering')}>
-                    <FontAwesomeIcon icon={faBolt} className="tab-icon" />
-                    <h3>Electrical Engineering</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Mechanical Engineering')}>
-                    <FontAwesomeIcon icon={faWrench} className="tab-icon" />
-                    <h3>Mechanical Engineering</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Civil Engineering')}>
-                    <FontAwesomeIcon icon={faBuilding} className="tab-icon" />
-                    <h3>Civil Engineering</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Architectural Studies')}>
-                    <FontAwesomeIcon icon={faDraftingCompass} className="tab-icon" />
-                    <h3>Architectural Studies</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Geomatics')}>
-                    <FontAwesomeIcon icon={faGlobe} className="tab-icon" />
-                    <h3>Geomatics</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Construction')}>
-                    <FontAwesomeIcon icon={faHammer} className="tab-icon" />
-                    <h3>Construction</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Environmental')}>
-                    <FontAwesomeIcon icon={faLeaf} className="tab-icon" />
-                    <h3>Environmental</h3>
-                </div>
-
-                <div className="tab" onClick={() => handleTabClick('Urban')}>
-                    <FontAwesomeIcon icon={faCity} className="tab-icon" />
-                    <h3>Urban</h3>
-                </div>
             </div>
 
             {/* Profile icon section */}
@@ -129,15 +129,47 @@ const Home = () => {
                 </button>
             </div>
 
-            {/* Sliding form for profile info */}
+            {/* Sliding and Scrollable Profile Form */}
             {isProfileVisible && (
-                <div className={`profile-info-form ${isProfileVisible ? 'show' : ''}`}>
+                <div className="profile-info-form show">
+                    <button className="close-button" onClick={() => setIsProfileVisible(false)}>
+                        <FontAwesomeIcon icon={faTimes} />
+                    </button>
                     <h2>Profile Information</h2>
-                    <p><strong>Department:</strong> {summary.department}</p>
-                    <p><strong>Student No:</strong> {summary.studentNo}</p>
-                    <p><strong>Career Support:</strong> {summary.careerSupport ? "Yes" : "No"}</p>
-                    <p><strong>Course Challenges:</strong> {summary.courseChallenges}</p>
-                    {/* Display other fields as necessary */}
+
+                    <div className="form-content">
+                        <label>Department:</label>
+                        <input type="text" name="department" value={summary.department || ''} readOnly />
+
+                        <label>Student No:</label>
+                        <input type="text" name="studentNo" value={summary.studentNo || ''} readOnly />
+
+                        <label>Career Support:</label>
+                        <input type="checkbox" name="careerSupport" checked={summary.careerSupport || false} onChange={handleInputChange} />
+
+                        <label>Course Challenges:</label>
+                        <input type="text" name="courseChallenges" value={summary.courseChallenges || ''} readOnly/>
+
+                        <label>Emotional State:</label>
+                        <input type="text" name="emotionalState" value={summary.emotionalState || ''} onChange={handleInputChange} />
+
+                        <label>Financial Aid Help:</label>
+                        <input type="checkbox" name="financialAidHelp" checked={summary.financialAidHelp || false} onChange={handleInputChange} />
+
+                        <label>Internship Interest:</label>
+                        <input type="checkbox" name="internshipInterest" checked={summary.internshipInterest || false} onChange={handleInputChange} />
+
+                        <label>Needs Tutor:</label>
+                        <input type="checkbox" name="needsTutor" checked={summary.needsTutor || false} onChange={handleInputChange} />
+
+                        <label>Preferred Communication:</label>
+                        <input type="text" name="preferredCommunication" value={summary.preferredCommunication || ''} onChange={handleInputChange} />
+                    </div>
+
+                    {error && <p className="error">{error}</p>}
+                    <button className="save-button" onClick={handleSaveProfile} disabled={isSaving}>
+                        {isSaving ? "Saving..." : "Save"}
+                    </button>
                 </div>
             )}
         </div>
