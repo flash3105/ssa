@@ -43,6 +43,7 @@ const SignUp = () => {
                 department,
                 email,
                 password,
+                selectedCourse
             };
 
             // If the user is a Tutor, include the subject

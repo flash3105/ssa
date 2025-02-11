@@ -40,6 +40,7 @@ def register():
     email = data.get('email')
     password = data.get('password')
     role = data.get('role', 'Student')  # Default role is "Student"
+    subject = data.get('selectedCourse')
 
     # Input validation
     if not name or not email or not password:
@@ -66,6 +67,7 @@ def register():
         "password": hashed_password.decode('utf-8'),
         "role": role,
         "department": department,
+        "subject" : subject
     })
 
     print(f"User inserted with ID: {result.inserted_id}")  # For debugging
@@ -287,17 +289,71 @@ def get_summary(student_number):
 @app.route('/api/users/adminP', methods=['GET'])
 def get_tutors_and_advisors():
     """
-    Fetch all users who have the role of 'Tutor' or 'Academic Advisor'.
+    Fetch all users who have the role of 'Tutor' or 'Academic Advisor',
+    along with their subject, student number, and department.
     """
-    roles = ["Tutor", "Academic Advisor"]
-    users = list(users_collection.find({"role": {"$in": roles}}, {"_id": 1, "name": 1, "email": 1, "role": 1}))
+    try:
+        roles = ["Tutor", "Academic Advisor"]
+        users = list(users_collection.find(
+            {"role": {"$in": roles}}, 
+            {"_id": 1, "name": 1, "email": 1, "role": 1, "subject": 1, "studentNo": 1, "department": 1}
+        ))
 
-    # Convert ObjectId to string
-    for user in users:
-        user["_id"] = str(user["_id"])
+        if not users:
+            return jsonify({"message": "No tutors or academic advisors found."}), 404
+        
+        # Convert ObjectId to string
+        for user in users:
+            user["_id"] = str(user["_id"])
 
-    return jsonify(users), 200
+        return jsonify(users), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
+
+@app.route('/api/users/editAdmin/<string:id>', methods=['PUT'])
+def edit_user(id):
+    try:
+        # Get the user by ID
+        user = users_collection.find_one({"_id": ObjectId(id)})
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Update the user fields from the request body
+        data = request.get_json()
+        update_data = {
+            "name": data.get("name", user.get("name")),
+            "email": data.get("email", user.get("email")),
+            "role": data.get("role", user.get("role")),
+            "studentNo": data.get("studentNo", user.get("studentNo")),
+            "department": data.get("department", user.get("department")),
+            "subject": data.get("subject", user.get("subject"))
+        }
+
+        # Update the user in MongoDB
+        users_collection.update_one({"_id": ObjectId(id)}, {"$set": update_data})
+
+        return jsonify({"message": "User updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# Delete user (MongoDB)
+@app.route('/api/users/delete/<string:id>', methods=['DELETE'])
+def delete_user(id):
+    try:
+        # Get the user by ID
+        user = users_collection.find_one({"_id": ObjectId(id)})
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Delete the user from MongoDB
+        users_collection.delete_one({"_id": ObjectId(id)})
+
+        return jsonify({"message": "User deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Run the Flask app
 if __name__ == '__main__':
