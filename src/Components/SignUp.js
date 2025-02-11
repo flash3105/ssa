@@ -30,7 +30,10 @@ const SignUp = () => {
             localStorage.setItem('department', department);
             localStorage.setItem('studentNo', studentNo);
             setSuccess(true);
-            setTimeout(() => navigate('/survery'), 3000); // Redirect to login after 3 seconds
+            setTimeout(() => {
+                navigate(role === 'Student' ? '/survery' : '/');
+            }, 3000);
+           
         } catch (err) {
             setError(err.response?.data?.message || 'Sign-Up failed');
         }
