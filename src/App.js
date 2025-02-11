@@ -13,6 +13,7 @@ import CareerGuidance from './Components/CareerGuidance.js';
 import FinancialAid from './Components/FinancialAid.js';
 import AdministrativeIssues from './Components/AdministrativeIssues.js';
 import Survery from './Components/Survery.js';
+import SuperUser from './Pages/SuperUser.js';
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
           <Route path="/SignUp" element={<SignUp/>}/>
           <Route path="/survery" element={<Survery/>}/>
           <Route path="/Bookings" element={<Bookings/>}/>
+          <Route path="/superuser" element={<SuperUser/>}/>
+
           {/* Dynamic routes for problem categories */}
           <Route path="/academic-challenge" element={<AcademicChallenge />} />
           <Route path="/mental-health" element={<MentalHealth />} />

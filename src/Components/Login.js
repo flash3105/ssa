@@ -27,6 +27,7 @@ const Login = () => {
             localStorage.setItem('email', email);
             localStorage.setItem('studentNo', studentNo);
             console.log(studentNo);
+            console.log(response.data); 
             // Fetch survey summary separately
             fetchSurveySummary(studentNo, token);
     

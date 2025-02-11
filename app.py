@@ -282,6 +282,21 @@ def get_summary(student_number):
         return jsonify({"error": "An error occurred while fetching the summary."}), 500
 
 
+#get tutors or advisors 
+
+@app.route('/api/users/adminP', methods=['GET'])
+def get_tutors_and_advisors():
+    """
+    Fetch all users who have the role of 'Tutor' or 'Academic Advisor'.
+    """
+    roles = ["Tutor", "Academic Advisor"]
+    users = list(users_collection.find({"role": {"$in": roles}}, {"_id": 1, "name": 1, "email": 1, "role": 1}))
+
+    # Convert ObjectId to string
+    for user in users:
+        user["_id"] = str(user["_id"])
+
+    return jsonify(users), 200
 
 
 # Run the Flask app

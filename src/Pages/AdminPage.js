@@ -7,10 +7,12 @@ import AdminDashboard from './AdminDashboard';
 import CalendarComp from '../Components/CalenderComp';
 
 function AdminPage(){
+    const studentNumber = localStorage.getItem('studentNo');
     return(
         <>
+        
             <AdminDashboard/>
-            <Sidebar/>
+            <Sidebar studentNumber={studentNumber} />
             <CalendarComp/>
 
           
