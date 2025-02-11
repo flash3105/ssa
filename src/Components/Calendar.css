@@ -1,0 +1,39 @@
+.calendar-container {
+    position: absolute;  /* Position it relative to the page */
+    top: 20px;  /* Adjust as needed */
+    right: 10px;  /* Align to the right */
+    width: 250px;
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensures it appears above other elements */
+}
+
+.react-calendar {
+    border: none;
+    width: 100%;
+    background: white; /* Ensures background is visible */
+    color: black; /* Ensures numbers are visible */
+}
+
+.react-calendar__tile {
+    padding: 10px;
+    border-radius: 8px;
+    color: black; /* Ensure numbers are visible */
+}
+
+.react-calendar__tile--active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.react-calendar__month-view__days__day {
+    color: black !important; /* Forces the date numbers to be visible */
+}
+
+.react-calendar__navigation button {
+    color: black;
+    font-weight: bold;
+}
