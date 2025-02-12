@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./AcademicChallenge.css";
 
 const AcademicChallenge = () => {
@@ -11,30 +12,6 @@ const AcademicChallenge = () => {
     const [tutors, setTutors] = useState([]);
     const [advisors, setAdvisors] = useState([]);
     const [departmentModules, setDepartmentModules] = useState([]);
-
-    // Declare DepTutors and DepAdvisors inside the component
-    const DepTutors = {
-        "Chemistry for Engineers": [
-            { name: "Sihle Nduna", email: "sihle.nduna@example.com" },
-            { name: "Jabu Wala", email: "jabu.wala@example.com" },
-            { name: "Steve Van Wijk", email: "steve.vanwijk@example.com" },
-        ],
-        "Introduction to Chemical Engineering": [
-            { name: "Jane Doe", email: "jane.doe@example.com" },
-            { name: "John Smith", email: "john.smith@example.com" },
-        ],
-    };
-
-    const DepAdvisors = {
-        "Chemical Engineering": [
-            { name: "Prof. Adams", email: "prof.adams@example.com" },
-            { name: "Dr. Sarah", email: "dr.sarah@example.com" },
-        ],
-        "Electrical Engineering": [
-            { name: "Prof. Lee", email: "prof.lee@example.com" },
-            { name: "Dr. Johnson", email: "dr.johnson@example.com" },
-        ],
-    };
 
     useEffect(() => {
         // Fetch courses.json from the public folder
@@ -49,6 +26,22 @@ const AcademicChallenge = () => {
             .catch((error) => console.error("Error fetching courses.json:", error));
     }, [selectedDepartment]);
 
+    useEffect(() => {
+        // Fetch tutors and advisors from API
+        axios.get("http://127.0.0.1:5000/api/users/adminP")
+            .then((response) => {
+                const users = response.data;
+
+                // Filter tutors and advisors based on department
+                const filteredTutors = users.filter(user => user.role === "Tutor" && user.department === selectedDepartment);
+                const filteredAdvisors = users.filter(user => user.role === "Academic Advisor" && user.department === selectedDepartment);
+
+                setTutors(filteredTutors);
+                setAdvisors(filteredAdvisors);
+            })
+            .catch(error => console.error("Error fetching tutors and advisors:", error));
+    }, [selectedDepartment]);
+
     const handleYearClick = (year) => {
         setSelectedYear(year);
         localStorage.setItem("selectedYear", year);
@@ -57,9 +50,11 @@ const AcademicChallenge = () => {
 
     const handleModuleClick = async (module) => {
         setSelectedModule(module);
-        setTutors(DepTutors[module] || []);
-        setAdvisors(DepAdvisors[selectedDepartment] || []);
         localStorage.setItem("selectedModule", module);
+
+        // Filter tutors who teach the selected module
+        const moduleTutors = tutors.filter(tutor => tutor.subject === module);
+        setTutors(moduleTutors);
     };
 
     const handleBookingClick = (name, email, type) => {
@@ -119,9 +114,9 @@ const AcademicChallenge = () => {
                     <div className="list-section">
                         <h3>Tutors</h3>
                         {tutors.length > 0 ? (
-                            tutors.map(({ name, email }) => (
+                            tutors.map(({ _id, name, email }) => (
                                 <button
-                                    key={name}
+                                    key={_id}
                                     className="button list-button"
                                     onClick={() => handleBookingClick(name, email, "Tutor")}
                                 >
@@ -135,9 +130,9 @@ const AcademicChallenge = () => {
                     <div className="list-section">
                         <h3>Academic Advisors</h3>
                         {advisors.length > 0 ? (
-                            advisors.map(({ name, email }) => (
+                            advisors.map(({ _id, name, email }) => (
                                 <button
-                                    key={name}
+                                    key={_id}
                                     className="button list-button"
                                     onClick={() => handleBookingClick(name, email, "Advisor")}
                                 >

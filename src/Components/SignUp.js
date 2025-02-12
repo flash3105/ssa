@@ -59,7 +59,7 @@ const SignUp = () => {
             setSuccess(true);
 
             setTimeout(() => {
-                navigate(role === 'Student' ? '/survey' : '/');
+                navigate(role === 'Student' ? '/survery' : '/');
             }, 3000);
         } catch (err) {
             setError(err.response?.data?.message || 'Sign-Up failed');
