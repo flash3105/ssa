@@ -40,6 +40,7 @@ def register():
     email = data.get('email')
     password = data.get('password')
     role = data.get('role', 'Student')  # Default role is "Student"
+    subject = data.get('selectedCourse')
 
     # Input validation
     if not name or not email or not password:
@@ -66,6 +67,7 @@ def register():
         "password": hashed_password.decode('utf-8'),
         "role": role,
         "department": department,
+        "subject" : subject
     })
 
     print(f"User inserted with ID: {result.inserted_id}")  # For debugging
@@ -127,8 +129,12 @@ def submit_log():
         "venue":None
             # Assign logs to a specific advisor
     }
-    db.logs.insert_one(log)  # Save the log to the database
+   #db.logs.insert_one(log)  # Save the log to the database
+    result = db.logs.insert_one(log)
+    print(f"Inserted Log with ID: {result.inserted_id}")
+
     return jsonify({"message": "Log submitted successfully"}), 201
+    
 
 #retrieve a log
 @app.route('/api/advisor/logs', methods=['GET'])
@@ -146,6 +152,23 @@ def get_advisor_logs():
 
     return jsonify(logs), 200
 #update data 
+
+
+@app.route('/api/appointment/confirm/<appointment_id>', methods=['PUT'])
+def confirm_appointment(appointment_id):
+    try:
+        result = db.logs.update_one(
+            {"_id": ObjectId(appointment_id)},
+            {"$set": {"confirmed": True}}
+        )
+        
+        if result.modified_count == 1:
+            return jsonify({"message": "Appointment confirmed successfully"}), 200
+        else:
+            return jsonify({"message": "Appointment not found or already confirmed"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/log/<log_id>', methods=['PATCH'])
 def update_log(log_id):
@@ -173,33 +196,7 @@ def update_log(log_id):
 
     return jsonify({"message": "Log updated successfully"}), 200
 
-@app.route('/api/appointments',methods=['POST'])
-def make_appointments():
-    data = request.json
-    log = {
-        "student_name": data.get("student_name"),
-        "student_email" : data.get("student_email"),
-        "department": data.get("department"),
-        "year": data.get("year"),
-        "module": data.get("module"),
-        "date" : data.get("date"),
-        "BookedTime":data.get("time"),
-        "timestamp": datetime.utcnow().isoformat(),
-        "advisor_email": data.get("advisor_email"), 
-          # Assign logs to a specific advisor
-    }
-    db.appointments.insert_one(log)  # Save the log to the database
-    return jsonify({"message": "Log submitted successfully"}), 201
-#retrieve appointments 
-@app.route('/api/appoint', methods=['GET'])
-def get_advisor_appoint():
-    advisor_email = request.args.get("advisor_email")
-    if not advisor_email:
-        return jsonify({"message": "Advisor email is required"}), 400
 
-    # Retrieve logs for the specific advisor
-    logs = list(db.appointments.find({"advisor_email": advisor_email}, {"_id": 0}))
-    return jsonify(logs), 200
 
 # Protected Route Example
 @app.route('/api/protected', methods=['GET'])
@@ -282,7 +279,76 @@ def get_summary(student_number):
         return jsonify({"error": "An error occurred while fetching the summary."}), 500
 
 
+#get tutors or advisors 
 
+@app.route('/api/users/adminP', methods=['GET'])
+def get_tutors_and_advisors():
+    """
+    Fetch all users who have the role of 'Tutor' or 'Academic Advisor',
+    along with their subject, student number, and department.
+    """
+    try:
+        roles = ["Tutor", "Academic Advisor"]
+        users = list(users_collection.find(
+            {"role": {"$in": roles}}, 
+            {"_id": 1, "name": 1, "email": 1, "role": 1, "subject": 1, "studentNo": 1, "department": 1}
+        ))
+
+        if not users:
+            return jsonify({"message": "No tutors or academic advisors found."}), 404
+        
+        # Convert ObjectId to string
+        for user in users:
+            user["_id"] = str(user["_id"])
+
+        return jsonify(users), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/users/editAdmin/<string:id>', methods=['PUT'])
+def edit_user(id):
+    try:
+        # Get the user by ID
+        user = users_collection.find_one({"_id": ObjectId(id)})
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Update the user fields from the request body
+        data = request.get_json()
+        update_data = {
+            "name": data.get("name", user.get("name")),
+            "email": data.get("email", user.get("email")),
+            "role": data.get("role", user.get("role")),
+            "studentNo": data.get("studentNo", user.get("studentNo")),
+            "department": data.get("department", user.get("department")),
+            "subject": data.get("subject", user.get("subject"))
+        }
+
+        # Update the user in MongoDB
+        users_collection.update_one({"_id": ObjectId(id)}, {"$set": update_data})
+
+        return jsonify({"message": "User updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# Delete user (MongoDB)
+@app.route('/api/users/delete/<string:id>', methods=['DELETE'])
+def delete_user(id):
+    try:
+        # Get the user by ID
+        user = users_collection.find_one({"_id": ObjectId(id)})
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Delete the user from MongoDB
+        users_collection.delete_one({"_id": ObjectId(id)})
+
+        return jsonify({"message": "User deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Run the Flask app
 if __name__ == '__main__':

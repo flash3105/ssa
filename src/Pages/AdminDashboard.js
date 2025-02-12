@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { format, parseISO } from 'date-fns';
+import { Table, Button, Input, Select, Modal } from 'antd';
 import './Admin.css';
+
+const { Option } = Select;
 
 const AdminDashboard = () => {
     const name = localStorage.getItem('name');
@@ -12,22 +15,26 @@ const AdminDashboard = () => {
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
+    const [selectedLog, setSelectedLog] = useState(null);
     const venues = ['Room A101', 'Room B202', 'Library', 'Online'];
 
+    // Fetch Logs & Appointments
     useEffect(() => {
         const fetchData = async () => {
+            if (!email) return; // Ensure email is available before making a request
+
             try {
                 setLoading(true);
-                const [logsResponse, appointmentsResponse] = await Promise.all([
-                    axios.get('http://127.0.0.1:5000/api/advisor/logs', {
-                        params: { advisor_email: email, search: searchTerm, status: statusFilter }
-                    }),
-                    axios.get('http://127.0.0.1:5000/api/appoint', {
-                        params: { advisor_email: email, search: searchTerm, status: statusFilter }
-                    })
-                ]);
-                setLogs(logsResponse.data);
-                setAppointments(appointmentsResponse.data);
+                const { data } = await axios.get('http://127.0.0.1:5000/api/advisor/logs', {
+                    params: { advisor_email: email, search: searchTerm, status: statusFilter }
+                });
+
+                // Filter confirmed & unconfirmed appointments
+                const unconfirmedLogs = data.filter(log => !log.confirmed);
+                const confirmedAppointments = data.filter(log => log.confirmed);
+
+                setLogs(unconfirmedLogs);
+                setAppointments(confirmedAppointments);
             } catch (err) {
                 setError('Failed to load data. Please try again.');
                 console.error(err);
@@ -35,26 +42,30 @@ const AdminDashboard = () => {
                 setLoading(false);
             }
         };
+
         fetchData();
     }, [email, searchTerm, statusFilter]);
 
+    // Handles Status Change (Approve, Reject, Confirm, Cancel)
     const handleStatusChange = async (id, newStatus, type) => {
         try {
-            await axios.put(`http://127.0.0.1:5000/api/${type}/${id}`, {
-                status: newStatus,
-                reviewed_by: email
-            });
-            if (type === 'logs') {
-                setLogs(logs.map(log => (log.id === id ? { ...log, status: newStatus } : log)));
-            } else {
-                setAppointments(appointments.map(appt => (appt._id === id ? { ...appt, status: newStatus } : appt)));
-            }
+            const endpoint = type === 'appoint' && newStatus === 'confirmed'
+                ? `/api/appointment/confirm/${id}`
+                : `/api/${type}/${id}`;
+
+            await axios.put(`http://127.0.0.1:5000${endpoint}`, { status: newStatus, reviewed_by: email });
+
+            const updateState = (items) =>
+                items.map(item => (item._id === id ? { ...item, status: newStatus } : item));
+
+            type === 'logs' ? setLogs(updateState(logs)) : setAppointments(updateState(appointments));
         } catch (err) {
             setError('Error updating status');
             console.error(err);
         }
     };
 
+    // Handles Venue Change
     const handleVenueChange = async (id, newVenue) => {
         try {
             await axios.patch(`http://127.0.0.1:5000/api/appoint/${id}`, { venue: newVenue });
@@ -65,8 +76,9 @@ const AdminDashboard = () => {
         }
     };
 
+    // Formats Date Safely
     const formatDate = (dateString) => {
-        if (!dateString) return 'N/A'; // Prevent errors when date is null/undefined
+        if (!dateString) return 'TBD'; // Placeholder for missing dates
         try {
             return format(parseISO(dateString), 'PP'); // Format date safely
         } catch (error) {
@@ -75,92 +87,95 @@ const AdminDashboard = () => {
         }
     };
 
+    // Table Columns Definition
+    const logColumns = [
+        { title: 'Date & Time', dataIndex: 'date', key: 'date', render: (text, record) => formatDate(record.date) + ' • ' + record.BookedTime },
+        { title: 'Student Name', dataIndex: 'student_name', key: 'student_name' },
+        { title: 'Department', dataIndex: 'department', key: 'department' },
+        { title: 'Year', dataIndex: 'year', key: 'year' },
+        { title: 'Module', dataIndex: 'module', key: 'module' },
+        {
+            title: 'Actions', key: 'actions', render: (text, record) => (
+                <>
+                    <Button onClick={() => handleStatusChange(record._id, 'confirmed', 'appoint')} type="primary">Confirm</Button>
+                    <Button onClick={() => handleStatusChange(record._id, 'cancelled', 'appoint')} type="danger">Cancel</Button>
+                </>
+            )
+        }
+    ];
+
+    const appointmentColumns = [
+        { title: 'Date & Time', dataIndex: 'date', key: 'date', render: (text, record) => formatDate(record.date) + ' • ' + record.BookedTime },
+        { title: 'Student', dataIndex: 'student_name', key: 'student_name' },
+        { title: 'Details', dataIndex: 'module', key: 'module' },
+        {
+            title: 'Venue', key: 'venue', render: (text, record) => (
+                <Select value={record.venue} onChange={(value) => handleVenueChange(record._id, value)}>
+                    {venues.map(v => <Option key={v} value={v}>{v}</Option>)}
+                </Select>
+            )
+        },
+        { title: 'Status', dataIndex: 'status', key: 'status' },
+        {
+            title: 'Actions', key: 'actions', render: (text, record) => (
+                <>
+                    <Button onClick={() => handleStatusChange(record._id, 'confirmed', 'appoint')} type="primary">Reschedule</Button>
+                    <Button onClick={() => handleStatusChange(record._id, 'cancelled', 'appoint')} type="danger">Cancel</Button>
+                </>
+            )
+        }
+    ];
+
     return (
         <div className="admin-container">
             <h1>Welcome, {name}!</h1>
+
+            {/* Search & Filter Controls */}
             <div className="controls">
-                <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                    <option value="all">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
+                <Input
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{ width: '200px', marginRight: '10px' }}
+                />
+                <Select
+                    value={statusFilter}
+                    onChange={(value) => setStatusFilter(value)}
+                    style={{ width: '200px' }}
+                >
+                    <Option value="all">All Statuses</Option>
+                    <Option value="pending">Pending</Option>
+                    <Option value="approved">Approved</Option>
+                    <Option value="rejected">Rejected</Option>
+                    <Option value="confirmed">Confirmed</Option>
+                    <Option value="completed">Completed</Option>
+                    <Option value="cancelled">Cancelled</Option>
+                </Select>
             </div>
+
+            {/* Error Message */}
             {error && <div className="error">{error}</div>}
-            {loading ? <p>Loading data...</p> : (
+
+            {/* Loading Indicator */}
+            {loading ? <p className="loading">Loading data...</p> : (
                 <>
+                    {/* Logs Table */}
                     <h2>Logs</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Student Name</th>
-                                <th>Department</th>
-                                <th>Year</th>
-                                <th>Module</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {logs.map(log => (
-                                <tr key={log.id}>
-                                    <td>{log.student_name}</td>
-                                    <td>{log.department}</td>
-                                    <td>{log.year}</td>
-                                    <td>{log.module}</td>
-                                    <td>{log.status}</td>
-                                    <td>
-                                        <button onClick={() => handleStatusChange(log.id, 'approved', 'logs')}>Approve</button>
-                                   
-                                    </td>
-                                    <td>
-                                    <button onClick={() => handleStatusChange(log.id, 'rejected', 'logs')}>Reject</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Table
+                        columns={logColumns}
+                        dataSource={logs}
+                        rowKey="_id"
+                        pagination={{ pageSize: 5 }}
+                    />
+
+                    {/* Appointments Table */}
                     <h2>Appointments</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date & Time</th>
-                                <th>Student</th>
-                                <th>Details</th>
-                                <th>Venue</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {appointments.map(appt => (
-                                <tr key={appt._id}>
-                                    <td>{formatDate(appt.date)} • {appt.BookedTime}</td>
-                                    <td>{appt.student_name}</td>
-                                    <td>{appt.module}</td>
-                                    <td>
-                                        <select value={appt.venue} onChange={(e) => handleVenueChange(appt._id, e.target.value)}>
-                                            {venues.map(v => <option key={v} value={v}>{v}</option>)}
-                                        </select>
-                                    </td>
-                                    <td>{appt.status}</td>
-                                    <td>
-                                        <button onClick={() => handleStatusChange(appt._id, 'confirmed', 'appoint')}>Confirm</button>
-                                        
-
-                                    </td>
-                                    <td>
-                                    <button onClick={() => handleStatusChange(appt._id, 'cancelled', 'appoint')}>Cancel</button>
-                                    </td>
-
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Table
+                        columns={appointmentColumns}
+                        dataSource={appointments}
+                        rowKey="_id"
+                        pagination={{ pageSize: 5 }}
+                    />
                 </>
             )}
         </div>
