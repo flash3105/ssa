@@ -129,8 +129,12 @@ def submit_log():
         "venue":None
             # Assign logs to a specific advisor
     }
-    db.logs.insert_one(log)  # Save the log to the database
+   #db.logs.insert_one(log)  # Save the log to the database
+    result = db.logs.insert_one(log)
+    print(f"Inserted Log with ID: {result.inserted_id}")
+
     return jsonify({"message": "Log submitted successfully"}), 201
+    
 
 #retrieve a log
 @app.route('/api/advisor/logs', methods=['GET'])
@@ -148,6 +152,23 @@ def get_advisor_logs():
 
     return jsonify(logs), 200
 #update data 
+
+
+@app.route('/api/appointment/confirm/<appointment_id>', methods=['PUT'])
+def confirm_appointment(appointment_id):
+    try:
+        result = db.logs.update_one(
+            {"_id": ObjectId(appointment_id)},
+            {"$set": {"confirmed": True}}
+        )
+        
+        if result.modified_count == 1:
+            return jsonify({"message": "Appointment confirmed successfully"}), 200
+        else:
+            return jsonify({"message": "Appointment not found or already confirmed"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/log/<log_id>', methods=['PATCH'])
 def update_log(log_id):
@@ -175,33 +196,7 @@ def update_log(log_id):
 
     return jsonify({"message": "Log updated successfully"}), 200
 
-@app.route('/api/appointments',methods=['POST'])
-def make_appointments():
-    data = request.json
-    log = {
-        "student_name": data.get("student_name"),
-        "student_email" : data.get("student_email"),
-        "department": data.get("department"),
-        "year": data.get("year"),
-        "module": data.get("module"),
-        "date" : data.get("date"),
-        "BookedTime":data.get("time"),
-        "timestamp": datetime.utcnow().isoformat(),
-        "advisor_email": data.get("advisor_email"), 
-          # Assign logs to a specific advisor
-    }
-    db.appointments.insert_one(log)  # Save the log to the database
-    return jsonify({"message": "Log submitted successfully"}), 201
-#retrieve appointments 
-@app.route('/api/appoint', methods=['GET'])
-def get_advisor_appoint():
-    advisor_email = request.args.get("advisor_email")
-    if not advisor_email:
-        return jsonify({"message": "Advisor email is required"}), 400
 
-    # Retrieve logs for the specific advisor
-    logs = list(db.appointments.find({"advisor_email": advisor_email}, {"_id": 0}))
-    return jsonify(logs), 200
 
 # Protected Route Example
 @app.route('/api/protected', methods=['GET'])
