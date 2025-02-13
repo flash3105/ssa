@@ -1,7 +1,7 @@
 {
   "EBE_Courses": {
     "Civil Engineering": {
-      "1st Year": [
+      "1": [
         "Chemistry for Engineers",
         "Engineering Mechanics",
         "Mathematics IA for Engineers Extended",
@@ -9,7 +9,7 @@
         "Physics A for ASPECT",
         "Physics B for ASPECT"
       ],
-      "2nd Year": [
+      "2": [
         "Introduction to Engineering",
         "Mechanics of Materials",
         "Structural Analysis I",
@@ -18,14 +18,14 @@
         "Introduction to Engineering Drawing",
         "Introduction to Mechanical Design"
       ],
-      "3rd Year": [
+      "3": [
         "Construction Surveying",
         "Geotechnical Engineering I",
         "Fluid Mechanics",
         "Construction Materials",
         "Water Treatment"
       ],
-      "4th Year": [
+      "4": [
         "Design Project",
         "Professional Practice",
         "Waste Water Treatment",
@@ -35,7 +35,7 @@
       ]
     },
     "Electrical Engineering": {
-      "1st Year": [
+      "1": [
         "Introduction to Electronic Engineering",
         "Mathematics IA for Engineers Extended",
         "Physics A for ASPECT",
@@ -43,7 +43,7 @@
         "Mathematics IB for Engineers Extended",
         "Physics B for ASPECT"
       ],
-      "2nd Year": [
+      "2": [
         "Analogue Electronics",
         "Embedded Systems I",
         "Professional Communication for Electrical Engineering",
@@ -53,7 +53,7 @@
         "Project Management",
         "Electromagnetism for Engineers"
       ],
-      "3rd Year": [
+      "3": [
         "Electrical Engineering Design Principles",
         "Electronic Devices and Circuits",
         "Energy Conversion",
@@ -62,7 +62,7 @@
         "Embedded Systems II",
         "Engineering Design: Mechatronics"
       ],
-      "4th Year": [
+      "4": [
         "Engineering System Design",
         "Law for Engineers",
         "Professional Communication Studies",
@@ -73,7 +73,7 @@
       ]
     },
     "Mechanical Engineering": {
-      "1st Year": [
+      "1": [
         "Mathematics IA for Engineers Extended",
         "Mathematics IB for Engineers Extended",
         "Introduction to Mechanical Engineering",
@@ -81,7 +81,7 @@
         "Physics B for ASPECT",
         "Practical Training I"
       ],
-      "2nd Year": [
+      "2": [
         "Chemistry for Engineers",
         "Introduction to Electrical Engineering & Power Utilisation",
         "Introduction to Analogue & Digital Electronics",
@@ -91,7 +91,7 @@
         "Introduction to Mechanical Design",
         "Introduction to Engineering Mechanics"
       ],
-      "3rd Year": [
+      "3": [
         "Electrical Engineering Design Principles",
         "Electromagnetic Engineering",
         "Electronic Devices and Circuits",
@@ -100,7 +100,7 @@
         "Control Systems Engineering",
         "Mechatronics"
       ],
-      "4th Year": [
+      "4": [
         "Engineering System Design",
         "Professional Communication Studies",
         "New Venture Planning",
@@ -109,7 +109,7 @@
       ]
     },
     "Chemical Engineering": {
-      "1st Year": [
+      "1": [
         "Chemistry 1000",
         "Chemical Engineering I",
         "Mathematics IA for Engineers",
@@ -117,19 +117,19 @@
         "Physics A for Engineers",
         "Statistics for Engineers"
       ],
-      "2nd Year": [
+      "2": [
         "Field Trip",
         "Chemical Engineering II",
         "Vector Calculus for Engineers",
         "Linear Algebra and DEs for Engineers"
       ],
-      "3rd Year": [
+      "3": [
         "Fundamentals of Chemical Engineering III",
         "Non-ideal Systems in Chemical Engineering",
         "Chemical Engineering Project Management",
         "Workplace Experience"
       ],
-      "4th Year": [
+      "4": [
         "Process Design",
         "Environmental Engineering",
         "Chemical Reaction Engineering",
@@ -137,25 +137,25 @@
       ]
     },
     "Mechatronic Engineering": {
-      "1st Year": [
+      "1": [
         "Engineering Drawing",
         "Mathematics for Engineers",
         "Physics for Engineers",
         "Introduction to Mechanical Design"
       ],
-      "2nd Year": [
+      "2": [
         "Solid Mechanics",
         "Fluid Mechanics",
         "Thermodynamics",
         "Mechatronics Systems"
       ],
-      "3rd Year": [
+      "3": [
         "Dynamics",
         "Control Systems",
         "Embedded Systems",
         "Mechanical Vibrations"
       ],
-      "4th Year": [
+      "4": [
         "Industrial Automation",
         "Robotics",
         "Final Year Project",
@@ -164,7 +164,7 @@
     },
     "Architecture, Planning and Geomatics": {
       "Bachelor of Architectural Studies": {
-        "1st Year": [
+        "1": [
           "Technology I",
           "History & Theory of Architecture I",
           "History & Theory of Architecture II",
@@ -172,7 +172,7 @@
           "Design & Theory Studio I",
           "Representation I"
         ],
-        "2nd Year": [
+        "2": [
           "History & Theory of Architecture III",
           "History & Theory of Architecture IV",
           "Theory of Structures III",
@@ -182,7 +182,7 @@
           "Design & Theory Studio II",
           "Work Experience"
         ],
-        "3rd Year": [
+        "3": [
           "History & Theory of Architecture V",
           "History & Theory of Architecture VI",
           "Technology III",
@@ -194,19 +194,19 @@
         ]
       },
       "Bachelor of Science in Geomatics": {
-        "1st Year": [
+        "1": [
           "Surveying I",
           "Geospatial Data Processing I",
           "Mathematics I",
           "Physics I"
         ],
-        "2nd Year": [
+        "2": [
           "Surveying II",
           "Geospatial Data Processing II",
           "Mathematics II",
           "Geodesy I"
         ],
-        "3rd Year": [
+        "3": [
           "Surveying III",
           "Geospatial Data Processing III",
           "Remote Sensing",
