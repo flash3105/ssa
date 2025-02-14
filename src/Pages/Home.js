@@ -283,12 +283,56 @@ const Home = () => {
                 </Card>
             </div>
 
-            {/* Profile icon section */}
-            <div className="profile-container">
+             {/* Profile icon section */}
+             <div className="profile-container">
                 <button className="profile-button" onClick={handleProfileClick}>
                     <FontAwesomeIcon icon={faUserCircle} className="profile-icon" />
                 </button>
             </div>
+
+            {/* Sliding and Scrollable Profile Form */}
+            {isProfileVisible && (
+                <div className="profile-info-form show">
+                    <button className="close-button" onClick={() => setIsProfileVisible(false)}>
+                        <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                    <h2>Profile Information</h2>
+
+                    <div className="form-content">
+                        <label>Department:</label>
+                        <input type="text" name="department" value={summary.department || ''} readOnly />
+
+                        <label>Student No:</label>
+                        <input type="text" name="studentNo" value={summary.studentNo || ''} readOnly />
+
+                        <label>Career Support:</label>
+                        <input type="checkbox" name="careerSupport" checked={summary.careerSupport || false} onChange={handleInputChange} />
+
+                        <label>Course Challenges:</label>
+                        <input type="text" name="courseChallenges" value={summary.courseChallenges || ''} readOnly/>
+
+                        <label>Emotional State:</label>
+                        <input type="text" name="emotionalState" value={summary.emotionalState || ''} onChange={handleInputChange} />
+
+                        <label>Financial Aid Help:</label>
+                        <input type="checkbox" name="financialAidHelp" checked={summary.financialAidHelp || false} onChange={handleInputChange} />
+
+                        <label>Internship Interest:</label>
+                        <input type="checkbox" name="internshipInterest" checked={summary.internshipInterest || false} onChange={handleInputChange} />
+
+                        <label>Needs Tutor:</label>
+                        <input type="checkbox" name="needsTutor" checked={summary.needsTutor || false} onChange={handleInputChange} />
+
+                        <label>Preferred Communication:</label>
+                        <input type="text" name="preferredCommunication" value={summary.preferredCommunication || ''} onChange={handleInputChange} />
+                    </div>
+
+                    {error && <p className="error">{error}</p>}
+                    <button className="save-button" onClick={handleSaveProfile} disabled={isSaving}>
+                        {isSaving ? "Saving..." : "Save"}
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
