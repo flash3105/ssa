@@ -222,3 +222,32 @@
     margin-top: 10px;
 }
 
+.home-container {
+    display: flex;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 250px; /* Sidebar width */
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.calendar-container {
+    margin-left: 260px; /* Adjust based on sidebar width */
+    padding: 20px;
+    width: 300px; /* Calendar container width */
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.tabs-container .tab {
+    cursor: pointer;
+}

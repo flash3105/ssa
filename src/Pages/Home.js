@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import {
     faIndustry,
     faBolt,
@@ -14,18 +15,26 @@ import {
     faUserCircle,
     faTimes
 } from '@fortawesome/free-solid-svg-icons';
+import { Card, Table, Button, Collapse } from 'antd';
 import './Home.css';
+import AnalogClock from '../Components/AnalogClock';
 
 const Home = () => {
     const name = localStorage.getItem('name');
     const studentNo = localStorage.getItem('studentNo');
+    const email = localStorage.getItem('email');
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const [summary, setSummary] = useState({});
     const [studentDepartment, setStudentDepartment] = useState('');
+    const [appointments, setAppointments] = useState([]);
+    const [historyLogs, setHistoryLogs] = useState([]);
     const [isProfileVisible, setIsProfileVisible] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState(null);
-
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [currentDate, setCurrentDate] = useState(''); // Added state for current date and time
     const departmentIcons = {
         'Chemical Engineering': faIndustry,
         'Electrical Engineering': faBolt,
@@ -38,19 +47,72 @@ const Home = () => {
         'Urban': faCity,
     };
 
+    const { Panel } = Collapse;
+
     useEffect(() => {
         const rawSummary = localStorage.getItem('summary');
         if (rawSummary) {
             try {
                 const parsedSummary = JSON.parse(rawSummary);
-                setSummary(parsedSummary);
-                setStudentDepartment(parsedSummary.department || '');
+                if (typeof parsedSummary === 'object') {  // Check if it's an object
+                    setSummary(parsedSummary);  // Directly set it as an object
+                    setStudentDepartment(parsedSummary.department || '');
+                } else {
+                    console.error("Parsed data is not an object:", parsedSummary);
+                }
             } catch (error) {
                 console.error("Error parsing summary from localStorage:", error);
             }
         }
     }, []);
-    console.log(summary);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!email) return;
+
+            try {
+                setLoading(true); 
+
+                const { data } = await axios.get('http://127.0.0.1:5000/api/student/logs', {
+                    params: { email: email}
+                });
+                console.log(data);
+
+                const unconfirmedLogs = data.filter(log => !log.confirmed);
+                const confirmedAppointments = data.filter(log => log.confirmed);
+
+                setHistoryLogs(unconfirmedLogs); 
+                setAppointments(confirmedAppointments); 
+            } catch (err) {
+                setError('Failed to load data. Please try again.');
+                console.error(err);
+            } finally {
+                setLoading(false); 
+            }
+        };
+
+        fetchData();
+    }, [email]);
+
+    // Set current date and time
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const current = new Date();
+            const formattedDate = current.toLocaleString('en-US', {
+                weekday: 'short', // Mon
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true,
+                month: 'short', // Feb
+                day: 'numeric', // 14
+            });
+            setCurrentDate(formattedDate);
+        }, 1000);
+
+        return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    }, []);
+
     const handleTabClick = (department) => {
         localStorage.setItem('selectedDepartment', department);
         navigate('/problems');
@@ -73,12 +135,11 @@ const Home = () => {
         setError(null);
 
         try {
-            // Ensure there is an ID before making the request
             if (!summary.id) {
                 throw new Error("Summary ID missing. Unable to save.");
             }
 
-            const response = await fetch(`https://api.example.com/surveysave/${summary.id}`, {
+            const response = await fetch(`http://127.0.0.1:5000/surveysave/${summary.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,17 +163,93 @@ const Home = () => {
         }
     };
 
+    const appointmentColumns = [
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+        },
+        {
+            title: 'Module',
+            dataIndex: 'module',
+            key: 'module',
+        },
+        {
+            title: 'Booked Time',
+            dataIndex: 'BookedTime',
+            key: 'BookedTime',
+        },
+        {
+            title: 'Student Name',
+            dataIndex: 'student_name',
+            key: 'student_name',
+        },
+        {
+            title: 'Advisor Email',
+            dataIndex: 'advisor_email',
+            key: 'advisor_email',
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (_, record) => (
+                <Collapse>
+                    <Panel header="View More Info" key="1">
+                        <div>
+                            <p><strong>Department:</strong> {record.department}</p>
+                            <p><strong>Year:</strong> {record.year}</p>
+                            <p><strong>Booking Time:</strong> {record.BookedTime}</p>
+                            <p><strong>Confirmed:</strong> {record.confirmed ? 'Yes' : 'No'}</p>
+                            <p><strong>Status:</strong> {record.status || 'N/A'}</p>
+                            <p><strong>Venue:</strong> {record.venue || 'N/A'}</p>
+                            <p><strong>Timestamp:</strong> {new Date(record.timestamp).toLocaleString()}</p>
+                        </div>
+                    </Panel>
+                </Collapse>
+            ),
+        },
+    ];
+
+    const historyColumns = [
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+        },
+        {
+            title: 'Module',
+            dataIndex: 'module',
+            key: 'module',
+        },
+        {
+            title: 'Booked Time',
+            dataIndex: 'BookedTime',
+            key: 'BookedTime',
+        },
+        {
+            title: 'Confirmed',
+            dataIndex: 'confirmed',
+            key: 'confirmed',
+            render: (text) => (text ? 'Yes' : 'No'),  
+        },
+    ];
+
     return (
         <div>
+            <AnalogClock/>
             <div className="welcome-container">
                 <h1>Welcome, {name}!</h1>
                 <h1>{studentNo}</h1>
                 <p>You are successfully logged in to the Student Success Hub.</p>
             </div>
+
+            
+
             <div className="quest">
                 <h3>Your department: </h3>
             </div>
 
+            {/* Other components */}
             <div className="tabs-container">
                 {studentDepartment && departmentIcons[studentDepartment] && (
                     <div className="tab" onClick={() => handleTabClick(studentDepartment)}>
@@ -122,56 +259,36 @@ const Home = () => {
                 )}
             </div>
 
+            {/* Appointments Section */}
+            <div className="appointments-section">
+                <Card title="Appointments" bordered={false}>
+                    <Table
+                        dataSource={appointments}
+                        columns={appointmentColumns}
+                        rowKey="id"
+                        pagination={false}
+                    />
+                </Card>
+            </div>
+
+            {/* History Logs Section */}
+            <div className="history-logs-section">
+                <Card title="History Logs" bordered={false}>
+                    <Table
+                        dataSource={historyLogs}
+                        columns={historyColumns}
+                        rowKey="id"
+                        pagination={false}
+                    />
+                </Card>
+            </div>
+
             {/* Profile icon section */}
             <div className="profile-container">
                 <button className="profile-button" onClick={handleProfileClick}>
                     <FontAwesomeIcon icon={faUserCircle} className="profile-icon" />
                 </button>
             </div>
-
-            {/* Sliding and Scrollable Profile Form */}
-            {isProfileVisible && (
-                <div className="profile-info-form show">
-                    <button className="close-button" onClick={() => setIsProfileVisible(false)}>
-                        <FontAwesomeIcon icon={faTimes} />
-                    </button>
-                    <h2>Profile Information</h2>
-
-                    <div className="form-content">
-                        <label>Department:</label>
-                        <input type="text" name="department" value={summary.department || ''} readOnly />
-
-                        <label>Student No:</label>
-                        <input type="text" name="studentNo" value={summary.studentNo || ''} readOnly />
-
-                        <label>Career Support:</label>
-                        <input type="checkbox" name="careerSupport" checked={summary.careerSupport || false} onChange={handleInputChange} />
-
-                        <label>Course Challenges:</label>
-                        <input type="text" name="courseChallenges" value={summary.courseChallenges || ''} readOnly/>
-
-                        <label>Emotional State:</label>
-                        <input type="text" name="emotionalState" value={summary.emotionalState || ''} onChange={handleInputChange} />
-
-                        <label>Financial Aid Help:</label>
-                        <input type="checkbox" name="financialAidHelp" checked={summary.financialAidHelp || false} onChange={handleInputChange} />
-
-                        <label>Internship Interest:</label>
-                        <input type="checkbox" name="internshipInterest" checked={summary.internshipInterest || false} onChange={handleInputChange} />
-
-                        <label>Needs Tutor:</label>
-                        <input type="checkbox" name="needsTutor" checked={summary.needsTutor || false} onChange={handleInputChange} />
-
-                        <label>Preferred Communication:</label>
-                        <input type="text" name="preferredCommunication" value={summary.preferredCommunication || ''} onChange={handleInputChange} />
-                    </div>
-
-                    {error && <p className="error">{error}</p>}
-                    <button className="save-button" onClick={handleSaveProfile} disabled={isSaving}>
-                        {isSaving ? "Saving..." : "Save"}
-                    </button>
-                </div>
-            )}
         </div>
     );
 };

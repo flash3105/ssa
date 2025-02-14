@@ -151,7 +151,21 @@ def get_advisor_logs():
         log["_id"] = str(log["_id"])  # Convert ObjectId to string
 
     return jsonify(logs), 200
-#update data 
+#update data
+@app.route('/api/student/logs', methods=['GET'])
+def get_student_logs():
+    student_email = request.args.get("email")
+    if not student_email:
+        return jsonify({"message": "Student email is required"}), 400
+
+    # Retrieve logs for the specific advisor, including the _id field
+    logs = list(db.logs.find({"student_email": student_email}, {"_id": 1, "student_name": 1, "advisor_email":1 ,"student_email": 1, "department": 1, "year": 1, "module": 1, "date": 1, "BookedTime": 1, "timestamp": 1, "venue": 1, "confirmed": 1, "status": 1}))
+
+    # Transform MongoDB ObjectId to string for JSON serialization
+    for log in logs:
+        log["_id"] = str(log["_id"])  # Convert ObjectId to string
+    
+    return jsonify(logs), 200 
 
 
 @app.route('/api/appointment/confirm/<appointment_id>', methods=['PUT'])

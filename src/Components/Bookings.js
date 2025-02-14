@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
 import "./Bookings.css"; // Add your styling here
+
 
 const Bookings = () => {
     const [selectedDate, setSelectedDate] = useState("");
@@ -15,7 +17,7 @@ const Bookings = () => {
     ]); // Example times
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-
+    const navigate = useNavigate();
     // Retrieve stored values
     const studentEmail = localStorage.getItem("email");
     const studentName = localStorage.getItem("name");
@@ -56,6 +58,7 @@ const Bookings = () => {
             setErrorMessage("");
             console.log("Booking logged:", response.data);
             console.log(bookingLog);
+            navigate('/home');
         } catch (error) {
             setErrorMessage("Failed to log booking. Please try again.");
             console.error("Error logging booking:", error);
