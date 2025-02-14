@@ -1,3 +1,4 @@
+from typing import Counter
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -274,6 +275,40 @@ def save_survey():
         return jsonify({"error": "An error occurred while submitting the survey."}), 500
     
 from bson import ObjectId
+
+@app.route('/api/analytics', methods=['GET'])
+def analyze_data():
+    # Logs Analysis
+    logs = db.logs.find()
+    departments = [log['department'] for log in logs]
+    total_logs = len(departments)
+    
+    department_counter = Counter(departments)
+    most_common_department = department_counter.most_common(3)
+    
+    # Survey Analysis
+    survey_data = db.surveys.find()
+    
+    # Department distribution from survey data
+    survey_departments = [log["department"] for log in logs]
+    survey_department_counter = Counter(survey_departments)
+    
+    # Analyzing survey questions
+    course_challenges = Counter([survey.get('courseChallenges') for survey in db.surveys.find()])
+    needs_tutor = Counter([survey.get('needsTutor') for survey in db.surveys.find()])
+    emotional_state = Counter([survey.get('emotionalState') for survey in db.surveys.find()])
+    
+    # Return all data as JSON
+    analysis = {
+        "total_logs": total_logs,
+        "most_common_department": most_common_department,
+        "survey_department_counts": dict(survey_department_counter),
+        "course_challenges": dict(course_challenges),
+        "needs_tutor": dict(needs_tutor),
+        "emotional_state": dict(emotional_state),
+    }
+    print(analysis)
+    return jsonify(analysis)
 
 @app.route('/api/get_summary/<student_number>', methods=['GET'])
 def get_summary(student_number):

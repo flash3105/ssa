@@ -16,7 +16,7 @@ const Sidebar = ({ studentNumber }) => {
             <ul>
                 <li><Link to="/AdminPage">Home</Link></li>
                 <li><Link to="#">Bookings</Link></li>
-                <li><Link to="#">Analytics</Link></li>
+                <li><Link to="/analytics">Analytics</Link></li>
                 <li><Link to="#">Report</Link></li>
                 {studentNumber === "admin5" && (
                     <li><Link to="/superuser">Admin</Link></li>
