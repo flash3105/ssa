@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const FinancialAid = () => {
     const navigate = useNavigate();
     const selectedDepartment = localStorage.getItem("selectedDepartment"); // Retrieve department
-
+    const studentNo = localStorage.getItem("studentNo"); // Retrieve student number
     const [formData, setFormData] = useState({
         needsFinancialAid: false,
         needsAidGuidance: false,
@@ -40,14 +40,21 @@ const FinancialAid = () => {
             return;
         }
 
+        // Add student number to the form data
+        const dataToSubmit = {
+            ...formData,
+            studentNo: studentNo, // Include student number
+        };
+
         try {
             const response = await axios.post(
-                "http://127.0.0.1:5000/api/saveSurvey",
-                formData
+                "http://127.0.0.1:5000/api/FinancialAid",
+                dataToSubmit // Submit data with student number
             );
             if (response.status === 200) {
                 alert("Survey submitted successfully!");
-                navigate("/");
+                window.location.href = "https://www.uct.ac.za/students/fees-funding-fees-fees-faq/financial-assistance";
+                 navigate('/home');
             } else {
                 alert("Failed to submit survey.");
             }

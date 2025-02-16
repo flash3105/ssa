@@ -250,7 +250,36 @@ def protected():
     except jwt.InvalidTokenError:
         return jsonify({"message": "Invalid token"}), 401
     
+    #Posting data into finaid
+@app.route('/api/FinancialAid', methods=['POST'])
+def save_financial_aid():
+    try:
+        data = request.get_json()  # Get data from the request body
+        
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        # Correct dictionary syntax (use : instead of =)
+        financial_aid_data = {
+            "needsFinancialAid": data.get('needsFinancialAid'),
+            "needsAidGuidance": data.get('needsAidGuidance'),
+            "needsAidOfficer": data.get('needsAidOfficer'),
+            "studentNo" : data.get('studentNo')
+        }
+        
+        # Save the survey data to MongoDB
+        db.FinAid.insert_one(financial_aid_data)
 
+        # Respond with a success message
+        return jsonify({"message": "Survey submitted successfully!"}), 200
+        
+    except Exception as e:
+        # Catch any unexpected errors and log them
+        print(f"Error saving survey: {e}")
+        return jsonify({"error": "An error occurred while submitting the survey."}), 500
+
+
+  
 @app.route('/api/saveSurvey', methods=['POST'])
 def save_survey():
     try:

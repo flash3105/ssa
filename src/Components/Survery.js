@@ -101,7 +101,7 @@ const Survey = () => {
           studentAmbassador: false,
           preferredCommunication: "",
         });
-        setTimeout(() => navigate('/'), 2000); // Redirect to login after 3 seconds
+        setTimeout(() => navigate('/'), 2000); // Redirect to login after 2 seconds
       } else {
         alert("Failed to submit survey.");
       }
