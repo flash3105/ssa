@@ -68,13 +68,18 @@ const AdminDashboard = () => {
     // Handles Venue Change
     const handleVenueChange = async (id, newVenue) => {
         try {
-            await axios.patch(`http://127.0.0.1:5000/api/appoint/${id}`, { venue: newVenue });
+            await axios.put(`http://127.0.0.1:5000/api/appointment/venue/${id}`, {
+                venue: newVenue  // Send venue in the request body
+            });
             setAppointments(appointments.map(appt => (appt._id === id ? { ...appt, venue: newVenue } : appt)));
         } catch (err) {
             setError('Error updating venue');
-            console.error(err);
+            console.error('Axios error:', err);
         }
     };
+    
+    
+    
 
     // Formats Date Safely
     const formatDate = (dateString) => {
@@ -116,14 +121,14 @@ const AdminDashboard = () => {
             )
         },
         { title: 'Status', dataIndex: 'status', key: 'status' },
-        {
+       {/* {
             title: 'Actions', key: 'actions', render: (text, record) => (
                 <>
                     <Button onClick={() => handleStatusChange(record._id, 'confirmed', 'appoint')} type="primary">Reschedule</Button>
                     <Button onClick={() => handleStatusChange(record._id, 'cancelled', 'appoint')} type="danger">Cancel</Button>
                 </>
             )
-        }
+        }*/}
     ];
 
     return (
