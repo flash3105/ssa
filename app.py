@@ -358,12 +358,15 @@ def analyze_data():
     }
     print(analysis)
     return jsonify(analysis)
-
 @app.route('/api/get_summary/<student_number>', methods=['GET'])
 def get_summary(student_number):
     try:
         # Retrieve the survey from MongoDB
-        survey = db.surveys.find_one({"studentNo": student_number})
+        if "@" in student_number: 
+            student_id = student_number.split("@")[0]
+            survey=db.surveys.find_one({"studentNo": student_id})
+        else:
+             survey = db.surveys.find_one({"studentNo": student_number})
 
         if not survey:
             return jsonify({'message': 'No survey summary found'}), 404
@@ -375,6 +378,7 @@ def get_summary(student_number):
     except Exception as e:
         print(f"Error retrieving survey summary: {e}")
         return jsonify({"error": "An error occurred while fetching the summary."}), 500
+
 
 
 #get tutors or advisors 
