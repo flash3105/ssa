@@ -21,7 +21,7 @@ const AdminDashboard = () => {
   const [isProfileVisible, setIsProfileVisible] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const venues = ["Room A101", "Room B202", "Library", "Online"];
-
+  const status =["Pending","Completed","Cancelled"];
   useEffect(() => {
     const fetchData = async () => {
       if (!email) return;
@@ -75,6 +75,17 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleStatusUpdate = async (id, newStatus) => {
+    try {
+      await axios.put(`http://127.0.0.1:5000/api/appointment/status/${id}`, {
+        status: newStatus,
+      });
+      setAppointments(appointments.map((appt) => (appt._id === id ? { ...appt, status: newStatus } : appt)));
+    } catch (err) {
+      setError("Error updating status");
+      console.error("Axios error:", err);
+    }
+  };
   const handleStatusChange = async (id, newStatus, type) => {
     try {
       const endpoint = type === "appoint" && newStatus === "confirmed"
@@ -169,7 +180,19 @@ const AdminDashboard = () => {
         </Select>
       ),
     },
-    { title: "Status", dataIndex: "status", key: "status" },
+    { title: "Status", 
+       key: "status" ,
+       render:(text,record)=>(
+        <Select value={record.status} onChange={(value) => handleStatusUpdate(record._id,value)}>
+          {status.map((v)=>(
+            <Option key={v} value={v}>
+              {v}
+            </Option>
+          ))}
+        </Select>
+       ),
+
+    },
     {
       title: "Actions",
       key: "actions",

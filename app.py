@@ -203,7 +203,21 @@ def confirm_venue(appointment_id):
         print(f"Error updating venue: {str(e)}")  # More detailed error logging
         return jsonify({"error": str(e)}), 500
 
-
+@app.route('/api/appointment/status/<appointment_id>',methods=['PUT'])
+def update_status(appointment_id):
+    status = request.json.get('status')
+    try:
+        result =db.logs.update_one(
+            {"_id":ObjectId(appointment_id)},
+            {"$set":{"status":status}}
+        )
+        if result.modified_count == 1:
+            return jsonify({"message": "status confirmed successfully"}), 200
+        else:
+            return jsonify({"message": "status can't be set"}), 404
+    except Exception as e:
+        print(f"Error updating status: {str(e)}")  # More detailed error logging
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/log/<log_id>', methods=['PATCH'])
 def update_log(log_id):
@@ -329,6 +343,7 @@ from bson import ObjectId
 def analyze_data():
     # Logs Analysis
     logs = db.logs.find()
+    print(logs)
     departments = [log['department'] for log in logs]
     total_logs = len(departments)
     

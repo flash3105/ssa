@@ -168,6 +168,12 @@ const Home = () => {
             title: 'Date',
             dataIndex: 'date',
             key: 'date',
+            render: (date) => {
+                const currentDate = new Date();
+                const targetDate = new Date(date);
+                const difference = Math.ceil((targetDate - currentDate) / (1000 * 60 * 60 * 24));
+                return `${date} (${difference} days remaining)`;
+            }
         },
         {
             title: 'Module',
@@ -215,7 +221,15 @@ const Home = () => {
             title: 'Date',
             dataIndex: 'date',
             key: 'date',
+            render: (date) => {
+                const currentDate = new Date();
+                const targetDate = new Date(date);
+                const difference = Math.ceil((targetDate - currentDate) / (1000 * 60 * 60 * 24));
+                return `${date} (${difference} days remaining)`;
+            }
         },
+    
+    
         {
             title: 'Module',
             dataIndex: 'module',

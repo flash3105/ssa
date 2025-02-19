@@ -1,35 +1,32 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Card, Statistic, Row, Col, Table, Spin } from "antd";
+import { Card, Statistic, Row, Col, Table, Spin,Button } from "antd";
+import { useNavigate } from "react-router-dom";
 import * as d3 from "d3";
 
 const Analytics = () => {
   const [analytics, setAnalytics] = useState({});
   const [loading, setLoading] = useState(true);
-  
+  const navigate = useNavigate();
   // Create ref for D3 chart
   const pieChartRef = useRef(null);
 
   useEffect(() => {
-    // Check if data is already stored in localStorage
-    const storedData = localStorage.getItem('analyticsData');
-    if (storedData) {
-      setAnalytics(JSON.parse(storedData));
-      setLoading(false);
-    } else {
-      // Fetch analytics data from the API
-      fetch("http://localhost:5000/api/analytics")
-        .then((response) => response.json())
-        .then((result) => {
-          setAnalytics(result);
-          localStorage.setItem('analyticsData', JSON.stringify(result)); // Cache data locally
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          setLoading(false);
-        });
-    }
+    setLoading(true); // Set loading to true before the fetch call
+  
+    // Fetch analytics data from the API
+    fetch("http://127.0.0.1:5000/api/analytics")
+      .then((response) => response.json())
+      .then((result) => {
+        setAnalytics(result);
+        console.log(result);
+        setLoading(false); // Set loading to false once data is fetched
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false); // Handle error and stop loading
+      });
   }, []);
+  
 
   // Prepare data for the department distribution table
   const departmentData = Object.entries(analytics.survey_department_counts || {}).map(
@@ -47,39 +44,39 @@ const Analytics = () => {
     ([state, count]) => ({ state, count })
   );
 
-  // D3 Pie Chart Drawing Logic
   useEffect(() => {
-    if (analytics.survey_department_counts) {
-      const data = Object.entries(analytics.survey_department_counts).map(([key, value]) => ({
-        label: key,
-        value: value,
+    if (analytics.most_common_department) {
+      // Map the most_common_department data into the format D3 expects
+      const data = analytics.most_common_department.map(([label, value]) => ({
+        label,
+        value,
       }));
-
+  
       const width = 300;
       const height = 300;
       const radius = Math.min(width, height) / 2;
-
+  
       const svg = d3.select(pieChartRef.current)
         .attr("width", width)
         .attr("height", height)
         .append("g")
         .attr("transform", `translate(${width / 2},${height / 2})`);
-
+  
       const color = d3.scaleOrdinal(d3.schemeCategory10);
-
+  
       const pie = d3.pie().value((d) => d.value);
       const arc = d3.arc().innerRadius(0).outerRadius(radius);
-      
+  
       const arcs = svg.selectAll(".arc")
         .data(pie(data))
         .enter()
         .append("g")
         .attr("class", "arc");
-
+  
       arcs.append("path")
         .attr("d", arc)
         .style("fill", (d) => color(d.data.label));
-
+  
       arcs.append("text")
         .attr("transform", (d) => `translate(${arc.centroid(d)})`)
         .attr("dy", "0.35em")
@@ -87,13 +84,20 @@ const Analytics = () => {
         .text((d) => d.data.label);
     }
   }, [analytics]);
-
-  if (loading) {
-    return <Spin size="large" />;
-  }
+  
 
   return (
+
+    
     <div className="p-4">
+        {/* Back Navigator */}
+        <Button
+        type="default"
+        style={{ marginBottom: 16 }}
+        onClick={() => navigate(-1)} // Navigates back to the previous page
+      >
+        Back
+      </Button>
       <Row gutter={16}>
         {/* Total Logs */}
         <Col span={8}>
