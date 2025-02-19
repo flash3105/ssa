@@ -260,6 +260,7 @@ def save_feedback():
         feedback_data = {
             "student_number": data.get("studentNumber"),
             "advisor_email": data.get("advisorEmail"),
+            "module" : data.get("module"),
             "session_met_needs": data.get("sessionMetNeeds"),
             "further_support": data.get("furtherSupport"),
             "session_rating": data.get("sessionRating"),

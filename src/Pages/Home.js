@@ -129,6 +129,7 @@ const Home = () => {
                 setFeedbackData({
                     studentNumber: studentNo,
                     advisorEmail: appointment.advisor_email,
+                    module : appointment.module,
                 });
             }
         });
