@@ -22,6 +22,19 @@ const AdminDashboard = () => {
   const [profileData, setProfileData] = useState(null);
   const venues = ["Room A101", "Room B202", "Library", "Online"];
   const status =["Pending","Completed","Cancelled"];
+  const menu = (record) => (
+    <Menu>
+      <Menu.Item key="viewProfile" onClick={() => handleViewProfile(record.student_email)}>
+        View Profile
+      </Menu.Item>
+      <Menu.Item key="reschedule" onClick={() => handleStatusChange(record._id, "confirmed", "appoint")}>
+        Reschedule
+      </Menu.Item>
+      <Menu.Item key="cancel" onClick={() => handleStatusChange(record._id, "cancelled", "appoint")} danger>
+        Cancel
+      </Menu.Item>
+    </Menu>
+  );
   useEffect(() => {
     const fetchData = async () => {
       if (!email) return;
@@ -88,7 +101,7 @@ const AdminDashboard = () => {
   };
   const handleStatusChange = async (id, newStatus, type) => {
     try {
-      const endpoint = type === "appoint" && newStatus === "confirmed"
+      const endpoint = type === "appoint" && newStatus === "Pending"
         ? `/api/appointment/confirm/${id}`
         : `/api/${type}/${id}`;
 
@@ -96,7 +109,7 @@ const AdminDashboard = () => {
         status: newStatus,
         reviewed_by: email,
       });
-
+     
       const updateState = (items) =>
         items.map((item) => (item._id === id ? { ...item, status: newStatus } : item));
 
@@ -146,7 +159,7 @@ const AdminDashboard = () => {
       key: "actions",
       render: (text, record) => (
         <>
-          <Button onClick={() => handleStatusChange(record._id, "confirmed", "appoint")} type="primary">
+          <Button onClick={() => handleStatusChange(record._id, "Pending", "appoint")} type="primary">
             Confirm
           </Button>
           <Button onClick={() => handleStatusChange(record._id, "cancelled", "appoint")} type="danger">
@@ -236,13 +249,20 @@ const AdminDashboard = () => {
           <Option value="cancelled">Cancelled</Option>
         </Select>
       </div>
-
+    <p>Logs</p>
       <Table columns={logColumns} dataSource={logs} rowKey="_id" pagination={{ pageSize: 5 }} />
+      <p>Appointments</p>
       <Table columns={appointmentColumns} dataSource={appointments} rowKey="_id" pagination={{ pageSize: 5 }} />
 
-      <Modal title="Student Profile" visible={isProfileVisible} onCancel={() => setIsProfileVisible(false)} footer={null}>
-        {profileData ? <pre>{JSON.stringify(profileData, null, 2)}</pre> : "Loading profile..."}
-      </Modal>
+      <Modal
+  title="Student Profile"
+  open={isProfileVisible && profileData !== null} // Ensure profile data is available
+  onCancel={() => setIsProfileVisible(false)}
+  footer={null}
+>
+  {profileData ? <pre>{JSON.stringify(profileData, null, 2)}</pre> : "Loading profile..."}
+</Modal>
+
     </div>
   );
 };
