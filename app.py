@@ -245,6 +245,38 @@ def update_log(log_id):
 
     return jsonify({"message": "Log updated successfully"}), 200
 
+#feedback ....
+@app.route('/api/feedback', methods=['POST'])
+def save_feedback():
+    try:
+        # Get the JSON data from the request
+        data = request.get_json()
+
+        # Check if data was provided
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        # Prepare feedback data to insert into the database
+        feedback_data = {
+            "student_number": data.get("studentNumber"),
+            "advisor_email": data.get("advisorEmail"),
+            "session_met_needs": data.get("sessionMetNeeds"),
+            "further_support": data.get("furtherSupport"),
+            "session_rating": data.get("sessionRating"),
+            "improvement_suggestions": data.get("improvementSuggestions"),
+            "additional_notes": data.get("additionalNotes"),
+            "timestamp": datetime.utcnow()  # Save current UTC time as feedback timestamp
+        }
+
+        # Insert feedback into the database
+        db.feedback.insert_one(feedback_data)
+
+        # Respond with a success message
+        return jsonify({"message": "Feedback submitted successfully!"}), 200
+    except Exception as e:
+        # Catch any unexpected errors and log them
+        print(f"Error saving feedback: {e}")
+        return jsonify({"error": "An error occurred while submitting the feedback."}), 500
 
 
 # Protected Route Example

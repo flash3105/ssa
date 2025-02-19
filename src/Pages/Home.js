@@ -18,7 +18,7 @@ import {
 import { Card, Table, Button, Collapse } from 'antd';
 import './Home.css';
 import AnalogClock from '../Components/AnalogClock';
-
+import FeedbackForm from '../Components/Feedback';
 const Home = () => {
     const name = localStorage.getItem('name');
     const studentNo = localStorage.getItem('studentNo');
@@ -48,6 +48,8 @@ const Home = () => {
     };
 
     const { Panel } = Collapse;
+    const [isFeedbackVisible, setIsFeedbackVisible] = useState(false); // State for feedback visibility
+    const [feedbackData, setFeedbackData] = useState({});
 
     useEffect(() => {
         const rawSummary = localStorage.getItem('summary');
@@ -112,6 +114,30 @@ const Home = () => {
 
         return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, []);
+     // Check if the appointment's date has passed and trigger the feedback form
+     useEffect(() => {
+        const currentDate = new Date();
+    
+        appointments.forEach((appointment) => {
+            const appointmentDate = new Date(appointment.date);
+            const daysRemaining = Math.ceil((appointmentDate - currentDate) / (1000 * 60 * 60 * 24));
+    
+            // Check if the appointment is completed and the days remaining is less than or equal to zero
+            if (daysRemaining <= 0 && appointment.status === 'Completed') {
+                // If the appointment has passed and the status is "Completed", trigger the feedback form
+                setIsFeedbackVisible(true);
+                setFeedbackData({
+                    studentNumber: studentNo,
+                    advisorEmail: appointment.advisor_email,
+                });
+            }
+        });
+    }, [appointments]);
+
+
+    const handleFeedbackClose = () => {
+        setIsFeedbackVisible(false); // Close feedback form
+    };
 
     const handleTabClick = (department) => {
         localStorage.setItem('selectedDepartment', department);
@@ -284,7 +310,16 @@ const Home = () => {
                     />
                 </Card>
             </div>
-
+                  {/* Conditionally render the Feedback Form */}
+            {isFeedbackVisible && (
+                <div className="feedback-form-overlay">
+                    <FeedbackForm 
+                        studentNumber={feedbackData.studentNumber} 
+                        advisorEmail={feedbackData.advisorEmail} 
+                        onClose={handleFeedbackClose} 
+                    />
+                </div>
+            )}
             {/* History Logs Section */}
             <div className="history-logs-section">
                 <Card title="History Logs" bordered={false}>
