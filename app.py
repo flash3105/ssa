@@ -9,6 +9,9 @@ import jwt
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 import re
+from werkzeug.utils import secure_filename
+from flask import send_from_directory
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
@@ -16,7 +19,7 @@ load_dotenv()
 # Flask app setup
 app = Flask(__name__)
 CORS(app)
-
+logging.basicConfig(level=logging.INFO)
 # MongoDB Atlas connection URI
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
@@ -26,9 +29,80 @@ db = client["SSA"]
 
 # Access the "user" collection
 users_collection = db["users"]
-
+collection = db["resources"]
 # JWT Secret Key for creating JWT tokens
 JWT_SECRET = os.getenv("JWT_SECRET", "your_jwt_secret_key")
+
+def convert_objectid_to_str(obj):
+    if isinstance(obj, ObjectId):
+        return str(obj)
+    elif isinstance(obj, dict):
+        return {k: convert_objectid_to_str(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_objectid_to_str(v) for v in obj]
+    else:
+        return obj
+
+@app.route('/api/upload-resource', methods=['POST'])
+def upload_resource():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    # Save the file or process it as needed
+    file.save(f"uploads/{file.filename}")
+
+    # Prepare resource data
+    resource_data = {
+        "department": request.form.get('department'),
+        "year": request.form.get('year'),
+        "course": request.form.get('course'),
+        "name": request.form.get('name'),
+        "description": request.form.get('description'),
+        "file_path": f"uploads/{file.filename}"
+    }
+
+    # Insert into MongoDB
+    result = collection.insert_one(resource_data)
+
+    # Fetch the inserted document
+    inserted_doc = collection.find_one({"_id": result.inserted_id})
+
+    # Convert ObjectId fields to strings
+    inserted_doc = convert_objectid_to_str(inserted_doc)
+
+    # Log the document for debugging
+    logging.info(f"Inserted document: {inserted_doc}")
+
+    return jsonify({"message": "Resource uploaded successfully!", "resource": inserted_doc}), 201
+
+@app.route('/api/resources/<course>/', methods=['GET'])
+def get_resource(course):
+    try:
+        # Fetch the resource based on the course
+        resource = collection.find_one({"course": course})
+
+        if resource:
+            # Retrieve the fields directly from the document
+            resources = [{
+                "name": resource.get("name", ""),
+                "description": resource.get("description", ""),
+                "file_path": resource.get("file_path", "")
+            }]
+            return jsonify({"resources": resources}), 200
+        else:
+            return jsonify({"resources": []}), 200  # No resources found for this course
+    except Exception as e:
+        logging.error(f"Error retrieving resource: {e}")
+        return jsonify({"error": "Failed to retrieve resource"}), 500
+    
+    
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory('uploads', filename)
 
 # Register Route
 @app.route('/api/register', methods=['POST'])

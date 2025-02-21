@@ -18,6 +18,7 @@ const Sidebar = ({ studentNumber }) => {
                 <li><Link to="#">Bookings</Link></li>
                 <li><Link to="/analytics">Analytics</Link></li>
                 <li><Link to="#">Report</Link></li>
+                <li><Link to="/resources">Resources</Link></li>
                 {studentNumber === "admin5" && (
                     <li><Link to="/superuser">Admin</Link></li>
                 )}

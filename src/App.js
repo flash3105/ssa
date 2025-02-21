@@ -15,7 +15,7 @@ import AdministrativeIssues from './Components/AdministrativeIssues.js';
 import Survery from './Components/Survery.js';
 import SuperUser from './Pages/SuperUser.js';
 import Analytics from './Pages/Analytics.js';
-
+import Resources from './Pages/Resources.js';
 function App() {
   return (
     <Router>
@@ -31,6 +31,7 @@ function App() {
           <Route path="/Bookings" element={<Bookings/>}/>
           <Route path="/superuser" element={<SuperUser/>}/>
           <Route path="/analytics" element={<Analytics/>}/>
+          <Route path="/resources" element={<Resources/>}/>
 
           {/* Dynamic routes for problem categories */}
           <Route path="/academic-challenge" element={<AcademicChallenge />} />

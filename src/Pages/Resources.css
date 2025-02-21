@@ -1,0 +1,70 @@
+/* General form container styling */
+.ant-form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form input styling */
+  .ant-form-item {
+    margin-bottom: 20px;
+  }
+  
+  /* Input and Select fields */
+  .ant-input,
+  .ant-select-selector,
+  .ant-btn {
+    font-size: 16px;
+    border-radius: 6px;
+  }
+  
+  /* Upload button */
+  .ant-upload {
+    width: 100%;
+  }
+  
+  .ant-upload .ant-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* File upload preview */
+  .file-preview {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Submit button */
+  .ant-btn-primary {
+    width: 100%;
+    background: #1890ff;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+  
+  .ant-btn-primary:hover {
+    background: #0077cc;
+  }
+  
+  /* Add a subtle fade-in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .ant-form {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  

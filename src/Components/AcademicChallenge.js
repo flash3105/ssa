@@ -12,6 +12,7 @@ const AcademicChallenge = () => {
     const [tutors, setTutors] = useState([]);
     const [advisors, setAdvisors] = useState([]);
     const [departmentModules, setDepartmentModules] = useState([]);
+    const [resources, setResources] = useState([]); // State for storing resources
 
     useEffect(() => {
         // Fetch courses.json from the public folder
@@ -52,6 +53,13 @@ const AcademicChallenge = () => {
         setSelectedModule(module);
         localStorage.setItem("selectedModule", module);
 
+        // Fetch resources for the selected course and module
+        axios.get(`http://127.0.0.1:5000/api/resources/${module}`)
+            .then((response) => {
+                setResources(response.data.resources || []);
+            })
+            .catch((error) => console.error("Error fetching resources:", error));
+            console.log(resources);
         // Filter tutors who teach the selected module
         const moduleTutors = tutors.filter(tutor => tutor.subject === module);
         setTutors(moduleTutors);
@@ -143,6 +151,30 @@ const AcademicChallenge = () => {
                             <p>No academic advisors available for this department.</p>
                         )}
                     </div>
+                    <div className="resources-section">
+    <h3>Resources</h3>
+    {resources.length > 0 ? (
+        resources.map((resource) => (
+            <div key={resource._id} className="resource-item">
+                <p>{resource.name}</p>
+                <p>{resource.description}</p>
+                {/* If a file_path exists, render a download link */}
+                {resource.file_path && (
+                    <a 
+                        href={`http://127.0.0.1:5000/${resource.file_path}`} 
+                        download 
+                        className="resource-file-link"
+                    >
+                        Download the file
+                    </a>
+                )}
+            </div>
+        ))
+    ) : (
+        <p>No resources available for this module.</p>
+    )}
+</div>
+
                 </div>
             )}
         </div>
