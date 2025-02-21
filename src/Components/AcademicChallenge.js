@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Row, Col, Button, Card, Typography, Select } from "antd";
@@ -71,6 +71,11 @@ const AcademicChallenge = () => {
 
     return (
         <div className="academic-challenge-container">
+            {/* Back Button */}
+            <Button type="default" onClick={() => navigate(-1)} style={{ marginBottom: 20 }}>
+                ← Back
+            </Button>
+
             <Title level={2} style={{ textAlign: "center", marginBottom: 20 }}>
                 Academic Challenges in {selectedDepartment}
             </Title>
@@ -153,58 +158,58 @@ const AcademicChallenge = () => {
                             )}
                         </Card>
                     </Col>
+
                     <Col span={24}>
-    <Card title="Resources" bordered>
-        {resources.length > 0 ? (
-            resources.map((resource) => (
-                <div key={resource._id} style={{ marginBottom: 20 }}>
-                    <Text strong>{resource.name}</Text>
-                    <p>{resource.description}</p>
+                        <Card title="Resources" bordered>
+                            {resources.length > 0 ? (
+                                resources.map((resource) => (
+                                    <div key={resource._id} style={{ marginBottom: 20 }}>
+                                        <Text strong>{resource.name}</Text>
+                                        <p>{resource.description}</p>
 
-                    {/* Show Preview for PDFs */}
-                    {resource.file_path && resource.file_path.endsWith(".pdf") && (
-                        <iframe
-                            src={`http://127.0.0.1:5000/${resource.file_path}`}
-                            style={{
-                                width: "100%",
-                                height: "300px",
-                                borderRadius: "8px",
-                                border: "1px solid #ddd",
-                                marginBottom: "10px",
-                            }}
-                        />
-                    )}
+                                        {/* Show Preview for PDFs */}
+                                        {resource.file_path && resource.file_path.endsWith(".pdf") && (
+                                            <iframe
+                                                src={`http://127.0.0.1:5000/${resource.file_path}`}
+                                                style={{
+                                                    width: "100%",
+                                                    height: "300px",
+                                                    borderRadius: "8px",
+                                                    border: "1px solid #ddd",
+                                                    marginBottom: "10px",
+                                                }}
+                                            />
+                                        )}
 
-                    {/* Download Link */}
-                    {resource.file_path && (
-                        <a
-                            href={`http://127.0.0.1:5000/${resource.file_path}`}
-                            download
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                display: "inline-block",
-                                padding: "8px 12px",
-                                backgroundColor: "#007bff",
-                                color: "#fff",
-                                borderRadius: "5px",
-                                textDecoration: "none",
-                                transition: "background-color 0.3s",
-                            }}
-                            onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
-                            onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
-                        >
-                            📥 Download the file
-                        </a>
-                    )}
-                </div>
-            ))
-        ) : (
-            <p>No resources available</p>
-        )}
-    </Card>
-</Col>
-
+                                        {/* Download Link */}
+                                        {resource.file_path && (
+                                            <a
+                                                href={`http://127.0.0.1:5000/${resource.file_path}`}
+                                                download
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    display: "inline-block",
+                                                    padding: "8px 12px",
+                                                    backgroundColor: "#007bff",
+                                                    color: "#fff",
+                                                    borderRadius: "5px",
+                                                    textDecoration: "none",
+                                                    transition: "background-color 0.3s",
+                                                }}
+                                                onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
+                                                onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
+                                            >
+                                                📥 Download the file
+                                            </a>
+                                        )}
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No resources available</p>
+                            )}
+                        </Card>
+                    </Col>
                 </Row>
             )}
         </div>
