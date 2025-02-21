@@ -1,88 +1,181 @@
 /* Main container */
 .academic-challenge-container {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
 }
 
 /* Title and description */
 .title {
-    font-size: 36px;
+    font-size: 40px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .description {
-    font-size: 18px;
+    font-size: 20px;
     color: #555;
-    margin-bottom: 20px;
-    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.8;
 }
 
 /* Section headers */
 .section h2 {
-    font-size: 24px;
-    color: #007bff;
-    margin-bottom: 10px;
+    font-size: 26px;
+    color: #1890ff;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
-/* Button container */
-.year-options, .module-options {
+/* Grid layout */
+.year-options, .module-options, .list-section, .resources-section {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 /* Buttons */
 .button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 5px;
-    background-color: #007bff;
+    border-radius: 8px;
+    background-color: #1890ff;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    justify-content: space-around;
 }
 
 .button:hover {
-    background-color: #0056b3;
+    background-color: #096dd9;
     transform: scale(1.05);
 }
 
-/* Year buttons */
-.year-button {
-    width: 120px;
+/* Year and Module buttons */
+.year-button, .module-button {
+    min-width: 140px;
     text-align: center;
 }
 
-/* Module buttons */
-.module-button {
-    width: auto;
+/* Selected module/tutors/advisors section */
+.list-section, .resources-section {
+    width: 100%;
     text-align: center;
+    margin-top: 30px;
 }
 
-/* Selected info section */
-.selected-info {
-    font-size: 18px;
+/* List headers */
+.list-section h3, .resources-section h3 {
+    font-size: 22px;
     color: #333;
-    margin-top: 20px;
-    line-height: 1.5;
-    background-color: #e6f2ff;
-    padding: 10px;
-    border-radius: 5px;
+    margin-bottom: 15px;
 }
 
-/* Media Queries for Tablets */
+/* Tutors and Advisors List */
+.list-button {
+    display: block;
+    width: 200px;
+    margin: 8px auto;
+    padding: 12px;
+    border-radius: 6px;
+    background-color: #52c41a;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.list-button:hover {
+    background-color: #389e0d;
+    transform: scale(1.05);
+}
+
+/* Resources Section */
+.resource-item {
+    background-color: #f0f2f5;
+    padding: 15px;
+    margin: 10px auto;
+    border-radius: 8px;
+    max-width: 600px;
+    text-align: left;
+}
+
+.resource-file-link {
+    display: block;
+    color: #1890ff;
+    font-weight: 500;
+    text-decoration: none;
+    margin-top: 5px;
+}
+
+.resource-file-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .academic-challenge-container {
+        padding: 25px;
+    }
+
+    .title {
+        font-size: 36px;
+    }
+
+    .description {
+        font-size: 18px;
+    }
+
+    .section h2 {
+        font-size: 24px;
+    }
+
+    .button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+    .year-button {
+        min-width: 120px;
+    }
+}
+
 @media (max-width: 768px) {
+    .academic-challenge-container {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 32px;
+    }
+
+    .description {
+        font-size: 16px;
+    }
+
+    .section h2 {
+        font-size: 22px;
+    }
+
+    .button {
+        font-size: 14px;
+        padding: 8px 18px;
+    }
+
+    .year-button {
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
     .academic-challenge-container {
         padding: 15px;
     }
@@ -92,7 +185,7 @@
     }
 
     .description {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .section h2 {
@@ -100,39 +193,11 @@
     }
 
     .button {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
-
-    .year-button {
-        width: 100px;
-    }
-}
-
-/* Media Queries for Phones */
-@media (max-width: 480px) {
-    .academic-challenge-container {
-        padding: 10px;
-    }
-
-    .title {
-        font-size: 24px;
-    }
-
-    .description {
-        font-size: 14px;
-    }
-
-    .section h2 {
-        font-size: 18px;
-    }
-
-    .button {
         font-size: 12px;
-        padding: 6px 12px;
+        padding: 6px 14px;
     }
 
     .year-button {
-        width: 80px;
+        min-width: 90px;
     }
 }

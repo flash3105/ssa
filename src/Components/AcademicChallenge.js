@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Row, Col, Button, Card, Typography, Select } from "antd";
 import "./AcademicChallenge.css";
 
+const { Title, Text } = Typography;
+const { Option } = Select;
+
 const AcademicChallenge = () => {
-    const selectedDepartment = localStorage.getItem("selectedDepartment"); // Retrieve department
+    const selectedDepartment = localStorage.getItem("selectedDepartment");
     const navigate = useNavigate();
 
     const [selectedYear, setSelectedYear] = useState(null);
@@ -12,10 +16,9 @@ const AcademicChallenge = () => {
     const [tutors, setTutors] = useState([]);
     const [advisors, setAdvisors] = useState([]);
     const [departmentModules, setDepartmentModules] = useState([]);
-    const [resources, setResources] = useState([]); // State for storing resources
+    const [resources, setResources] = useState([]);
 
     useEffect(() => {
-        // Fetch courses.json from the public folder
         fetch("/courses.json")
             .then((response) => response.json())
             .then((data) => {
@@ -28,15 +31,11 @@ const AcademicChallenge = () => {
     }, [selectedDepartment]);
 
     useEffect(() => {
-        // Fetch tutors and advisors from API
         axios.get("http://127.0.0.1:5000/api/users/adminP")
             .then((response) => {
                 const users = response.data;
-
-                // Filter tutors and advisors based on department
                 const filteredTutors = users.filter(user => user.role === "Tutor" && user.department === selectedDepartment);
                 const filteredAdvisors = users.filter(user => user.role === "Academic Advisor" && user.department === selectedDepartment);
-
                 setTutors(filteredTutors);
                 setAdvisors(filteredAdvisors);
             })
@@ -46,21 +45,19 @@ const AcademicChallenge = () => {
     const handleYearClick = (year) => {
         setSelectedYear(year);
         localStorage.setItem("selectedYear", year);
-        setSelectedModule(null); // Reset module selection
+        setSelectedModule(null);
     };
 
     const handleModuleClick = async (module) => {
         setSelectedModule(module);
         localStorage.setItem("selectedModule", module);
 
-        // Fetch resources for the selected course and module
         axios.get(`http://127.0.0.1:5000/api/resources/${module}`)
             .then((response) => {
                 setResources(response.data.resources || []);
             })
             .catch((error) => console.error("Error fetching resources:", error));
-            console.log(resources);
-        // Filter tutors who teach the selected module
+
         const moduleTutors = tutors.filter(tutor => tutor.subject === module);
         setTutors(moduleTutors);
     };
@@ -74,108 +71,141 @@ const AcademicChallenge = () => {
 
     return (
         <div className="academic-challenge-container">
-            <h1 className="title">Academic Challenges in {selectedDepartment}</h1>
-            <p className="description">
+            <Title level={2} style={{ textAlign: "center", marginBottom: 20 }}>
+                Academic Challenges in {selectedDepartment}
+            </Title>
+
+            <Text style={{ display: "block", textAlign: "center", marginBottom: 20 }}>
                 Select your year of study and the module you are facing challenges with. We'll guide you with tailored resources.
-            </p>
+            </Text>
 
-            {/* Render year of study options */}
             {!selectedYear && (
-                <div className="section">
-                    <h2>Select Your Year of Study</h2>
-                    <div className="year-options">
-                        {[1, 2, 3, 4].map((year) => (
-                            <button
-                                key={year}
-                                onClick={() => handleYearClick(year)}
-                                className="button year-button"
-                            >
+                <Row justify="center" gutter={[16, 16]}>
+                    {[1, 2, 3, 4].map((year) => (
+                        <Col key={year} xs={24} sm={12} md={6}>
+                            <Button type="primary" block onClick={() => handleYearClick(year)}>
                                 Year {year}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                            </Button>
+                        </Col>
+                    ))}
+                </Row>
             )}
 
-            {/* Render module options */}
             {selectedYear && !selectedModule && (
-                <div className="section">
-                    <h2>Year {selectedYear}: Select a Module</h2>
-                    <div className="module-options">
+                <div style={{ textAlign: "center", marginTop: 20 }}>
+                    <Title level={3}>Year {selectedYear}: Select a Module</Title>
+                    <Select
+                        style={{ width: "50%" }}
+                        placeholder="Select a module"
+                        onChange={handleModuleClick}
+                    >
                         {departmentModules[selectedYear]?.map((module) => (
-                            <button
-                                key={module}
-                                onClick={() => handleModuleClick(module)}
-                                className="button module-button"
-                            >
-                                {module}
-                            </button>
+                            <Option key={module} value={module}>{module}</Option>
                         ))}
-                    </div>
+                    </Select>
                 </div>
             )}
 
-            {/* Render tutors and advisors */}
             {selectedModule && (
-                <div className="section">
-                    <h2>Selected Module: {selectedModule}</h2>
-                    <div className="list-section">
-                        <h3>Tutors</h3>
-                        {tutors.length > 0 ? (
-                            tutors.map(({ _id, name, email }) => (
-                                <button
-                                    key={_id}
-                                    className="button list-button"
-                                    onClick={() => handleBookingClick(name, email, "Tutor")}
-                                >
-                                    {name}
-                                </button>
-                            ))
-                        ) : (
-                            <p>No tutors available for this module.</p>
-                        )}
-                    </div>
-                    <div className="list-section">
-                        <h3>Academic Advisors</h3>
-                        {advisors.length > 0 ? (
-                            advisors.map(({ _id, name, email }) => (
-                                <button
-                                    key={_id}
-                                    className="button list-button"
-                                    onClick={() => handleBookingClick(name, email, "Advisor")}
-                                >
-                                    {name}
-                                </button>
-                            ))
-                        ) : (
-                            <p>No academic advisors available for this department.</p>
-                        )}
-                    </div>
-                    <div className="resources-section">
-    <h3>Resources</h3>
-    {resources.length > 0 ? (
-        resources.map((resource) => (
-            <div key={resource._id} className="resource-item">
-                <p>{resource.name}</p>
-                <p>{resource.description}</p>
-                {/* If a file_path exists, render a download link */}
-                {resource.file_path && (
-                    <a 
-                        href={`http://127.0.0.1:5000/${resource.file_path}`} 
-                        download 
-                        className="resource-file-link"
-                    >
-                        Download the file
-                    </a>
-                )}
-            </div>
-        ))
-    ) : (
-        <p>No resources available for this module.</p>
-    )}
-</div>
+                <Row gutter={[24, 24]} style={{ marginTop: 20 }}>
+                    <Col span={24}>
+                        <Title level={3} style={{ textAlign: "center" }}>
+                            Selected Module: {selectedModule}
+                        </Title>
+                    </Col>
 
+                    <Col xs={24} md={12}>
+                        <Card title="Tutors" bordered>
+                            {tutors.length > 0 ? (
+                                tutors.map(({ _id, name, email }) => (
+                                    <Button
+                                        key={_id}
+                                        type="dashed"
+                                        block
+                                        onClick={() => handleBookingClick(name, email, "Tutor")}
+                                        style={{ marginBottom: 10 }}
+                                    >
+                                        {name}
+                                    </Button>
+                                ))
+                            ) : (
+                                <Text>No tutors available for this module.</Text>
+                            )}
+                        </Card>
+                    </Col>
+
+                    <Col xs={24} md={12}>
+                        <Card title="Academic Advisors" bordered>
+                            {advisors.length > 0 ? (
+                                advisors.map(({ _id, name, email }) => (
+                                    <Button
+                                        key={_id}
+                                        type="dashed"
+                                        block
+                                        onClick={() => handleBookingClick(name, email, "Advisor")}
+                                        style={{ marginBottom: 10 }}
+                                    >
+                                        {name}
+                                    </Button>
+                                ))
+                            ) : (
+                                <Text>No academic advisors available for this department.</Text>
+                            )}
+                        </Card>
+                    </Col>
+                    <Col span={24}>
+    <Card title="Resources" bordered>
+        {resources.length > 0 ? (
+            resources.map((resource) => (
+                <div key={resource._id} style={{ marginBottom: 20 }}>
+                    <Text strong>{resource.name}</Text>
+                    <p>{resource.description}</p>
+
+                    {/* Show Preview for PDFs */}
+                    {resource.file_path && resource.file_path.endsWith(".pdf") && (
+                        <iframe
+                            src={`http://127.0.0.1:5000/${resource.file_path}`}
+                            style={{
+                                width: "100%",
+                                height: "300px",
+                                borderRadius: "8px",
+                                border: "1px solid #ddd",
+                                marginBottom: "10px",
+                            }}
+                        />
+                    )}
+
+                    {/* Download Link */}
+                    {resource.file_path && (
+                        <a
+                            href={`http://127.0.0.1:5000/${resource.file_path}`}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                display: "inline-block",
+                                padding: "8px 12px",
+                                backgroundColor: "#007bff",
+                                color: "#fff",
+                                borderRadius: "5px",
+                                textDecoration: "none",
+                                transition: "background-color 0.3s",
+                            }}
+                            onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
+                            onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
+                        >
+                            📥 Download the file
+                        </a>
+                    )}
                 </div>
+            ))
+        ) : (
+            <p>No resources available</p>
+        )}
+    </Card>
+</Col>
+
+                </Row>
             )}
         </div>
     );

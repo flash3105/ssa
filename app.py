@@ -82,23 +82,21 @@ def upload_resource():
 @app.route('/api/resources/<course>/', methods=['GET'])
 def get_resource(course):
     try:
-        # Fetch the resource based on the course
-        resource = collection.find_one({"course": course})
+        # Fetch all resources related to the course
+        resources = collection.find({"course": course})
 
-        if resource:
-            # Retrieve the fields directly from the document
-            resources = [{
-                "name": resource.get("name", ""),
-                "description": resource.get("description", ""),
-                "file_path": resource.get("file_url", "")
-            }]
-            print(resources)
-            return jsonify({"resources": resources}), 200
-        else:
-            return jsonify({"resources": []}), 200  # No resources found for this course
+        # Convert the cursor to a list of dictionaries
+        resource_list = [{
+            "name": res.get("name", ""),
+            "description": res.get("description", ""),
+            "file_path": res.get("file_path", "")
+        } for res in resources]
+
+        return jsonify({"resources": resource_list}), 200
     except Exception as e:
-        logging.error(f"Error retrieving resource: {e}")
-        return jsonify({"error": "Failed to retrieve resource"}), 500
+        logging.error(f"Error retrieving resources: {e}")
+        return jsonify({"error": "Failed to retrieve resources"}), 500
+
     
 
 @app.route('/uploads/<filename>')
