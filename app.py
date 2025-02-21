@@ -90,8 +90,9 @@ def get_resource(course):
             resources = [{
                 "name": resource.get("name", ""),
                 "description": resource.get("description", ""),
-                "file_path": resource.get("file_path", "")
+                "file_path": resource.get("file_url", "")
             }]
+            print(resources)
             return jsonify({"resources": resources}), 200
         else:
             return jsonify({"resources": []}), 200  # No resources found for this course
@@ -99,7 +100,7 @@ def get_resource(course):
         logging.error(f"Error retrieving resource: {e}")
         return jsonify({"error": "Failed to retrieve resource"}), 500
     
-    
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory('uploads', filename)
