@@ -4,6 +4,7 @@ import "./Survey.css";
 import {  useNavigate } from "react-router-dom";
 
 const Survey = () => {
+    const API_URL = "https://ssa-fyk5.onrender.com";
     const navigate = useNavigate();
   const [student, setStudent] = useState({ name: "", studentNumber: "", department: "" });
   const [formData, setFormData] = useState({
@@ -80,7 +81,7 @@ const Survey = () => {
     const surveyData = { ...student, ...formData };
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/saveSurvey", surveyData);
+      const response = await axios.post(`${API_URL}/api/saveSurvey`, surveyData);
       if (response.status === 200) {
         
         setFormData({
