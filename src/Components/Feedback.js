@@ -12,7 +12,7 @@ const FeedbackForm = ({ studentNumber, advisorEmail, module,onClose }) => {
       const feedbackData = { ...values, studentNumber, advisorEmail,module };
       
       // Send the form data to the API
-      const response = await axios.post(`{API_URL}/api/feedback`, feedbackData);
+      const response = await axios.post(`${API_URL}/api/feedback`, feedbackData);
       if (response.status === 200) {
         message.success("Feedback submitted successfully!");
         form.resetFields();
