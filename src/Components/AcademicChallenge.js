@@ -8,6 +8,7 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 
 const AcademicChallenge = () => {
+    const API_URL = "https://ssa-fyk5.onrender.com";
     const selectedDepartment = localStorage.getItem("selectedDepartment");
     const navigate = useNavigate();
 
@@ -31,7 +32,7 @@ const AcademicChallenge = () => {
     }, [selectedDepartment]);
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:5000/api/users/adminP")
+        axios.get(`${API_URL}/api/users/adminP`)
             .then((response) => {
                 const users = response.data;
                 const filteredTutors = users.filter(user => user.role === "Tutor" && user.department === selectedDepartment);
@@ -52,7 +53,7 @@ const AcademicChallenge = () => {
         setSelectedModule(module);
         localStorage.setItem("selectedModule", module);
 
-        axios.get(`http://127.0.0.1:5000/api/resources/${module}`)
+        axios.get(`{API_URL}/api/resources/${module}`)
             .then((response) => {
                 setResources(response.data.resources || []);
             })
