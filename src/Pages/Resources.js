@@ -85,7 +85,7 @@ const Resources = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`${API_URL}/api/upload-resource", {
+      const response = await fetch(`${API_URL}/api/upload-resource`, {
         method: "POST",
         body: formData,
       });
