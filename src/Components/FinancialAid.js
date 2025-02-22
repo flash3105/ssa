@@ -4,6 +4,7 @@ import "./Survey.css";
 import { useNavigate } from "react-router-dom";
 
 const FinancialAid = () => {
+    const API_URL = "https://ssa-fyk5.onrender.com";
     const navigate = useNavigate();
     const selectedDepartment = localStorage.getItem("selectedDepartment"); // Retrieve department
     const studentNo = localStorage.getItem("studentNo"); // Retrieve student number
@@ -48,7 +49,7 @@ const FinancialAid = () => {
 
         try {
             const response = await axios.post(
-                "http://127.0.0.1:5000/api/FinancialAid",
+                `${API_URL}/api/FinancialAid`,
                 dataToSubmit // Submit data with student number
             );
             if (response.status === 200) {
