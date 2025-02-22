@@ -12,7 +12,7 @@ const SuperUser = () => {
   const [newUser, setNewUser] = useState({ name: "", email: "", role: "Tutor" });
   const [courses, setCourses] = useState([]);  // To store subjects data
   const navigate = useNavigate();
-
+const API_URL = "https://ssa-fyk5.onrender.com";
   // Fetch users and courses data
   useEffect(() => {
     fetchUsers();
@@ -21,7 +21,7 @@ const SuperUser = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:5000/api/users/adminP");
+      const response = await axios.get(`${API_URL}/api/users/adminP");
       setUsers(response.data);
       console.log("Users data:", response.data);
     } catch (error) {
@@ -40,7 +40,7 @@ const SuperUser = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/users/delete/${id}`);
+      await axios.delete(`${API_URL}/api/users/delete/${id}`);
       setUsers(users.filter((user) => user._id !== id));
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -55,7 +55,7 @@ const SuperUser = () => {
   const handleSave = async () => {
     try {
       if (editingUser) {
-        await axios.put(`http://127.0.0.1:5000/api/users/editAdmin/${editingUser._id}`, editingUser);
+        await axios.put(`${API_URL}/api/users/editAdmin/${editingUser._id}`, editingUser);
         setUsers(users.map((user) => (user._id === editingUser._id ? editingUser : user)));
       } else {
         const response = await axios.post("/api/users", newUser);
