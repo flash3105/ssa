@@ -9,6 +9,7 @@ const { TextArea } = Input;
 const { TabPane } = Tabs;
 
 const Resources = () => {
+  const API_URL = "https://ssa-fyk5.onrender.com";
   const [coursesData, setCoursesData] = useState({});
   const [department, setDepartment] = useState(null);
   const [year, setYear] = useState(null);
@@ -37,7 +38,7 @@ const Resources = () => {
     if (course && department && year) {
       const fetchResources = async () => {
         try {
-          const response = await fetch(`http://127.0.0.1:5000/api/resources/${course}`);
+          const response = await fetch(`${API_URL}/api/resources/${course}`);
           const data = await response.json();
           setResources(data.resources); // Assume the response contains a "resources" array
         } catch (error) {
@@ -84,7 +85,7 @@ const Resources = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/upload-resource", {
+      const response = await fetch(`${API_URL}/api/upload-resource", {
         method: "POST",
         body: formData,
       });
@@ -113,7 +114,7 @@ const Resources = () => {
 
   const handleDelete = async (resourceId) => {
     try {
-      const response = await fetch(`/api/delete-resource/${resourceId}`, {
+      const response = await fetch(`${API_URL}/api/delete-resource/${resourceId}`, {
         method: "DELETE",
       });
       if (response.ok) {
