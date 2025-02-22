@@ -9,12 +9,12 @@ const Analytics = () => {
   const navigate = useNavigate();
   // Create ref for D3 chart
   const pieChartRef = useRef(null);
-
+const API_URL = "https://ssa-fyk5.onrender.com";
   useEffect(() => {
     setLoading(true); // Set loading to true before the fetch call
   
     // Fetch analytics data from the API
-    fetch("http://127.0.0.1:5000/api/analytics")
+    fetch(`${API_URL}/api/analytics`)
       .then((response) => response.json())
       .then((result) => {
         setAnalytics(result);
