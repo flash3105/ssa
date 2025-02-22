@@ -21,7 +21,7 @@ const API_URL = "https://ssa-fyk5.onrender.com";
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/users/adminP");
+      const response = await axios.get(`${API_URL}/api/users/adminP`);
       setUsers(response.data);
       console.log("Users data:", response.data);
     } catch (error) {
