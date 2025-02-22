@@ -5,14 +5,14 @@ import './Survey.css';
 
 const FeedbackForm = ({ studentNumber, advisorEmail, module,onClose }) => {
   const [form] = Form.useForm();
-
+  const API_URL = "https://ssa-fyk5.onrender.com";
   const handleSubmit = async (values) => {
     try {
       // Add student number and advisor email to form values before submitting
       const feedbackData = { ...values, studentNumber, advisorEmail,module };
       
       // Send the form data to the API
-      const response = await axios.post("http://127.0.0.1:5000/api/feedback", feedbackData);
+      const response = await axios.post(`{API_URL}/api/feedback`, feedbackData);
       if (response.status === 200) {
         message.success("Feedback submitted successfully!");
         form.resetFields();
