@@ -11,7 +11,7 @@ const { Option } = Select;
 const AdminDashboard = () => {
   const name = localStorage.getItem("name");
   const email = localStorage.getItem("email");
-
+const API_URL = "https://ssa-fyk5.onrender.com";
   const [logs, setLogs] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
       try {
         setLoading(true);
         const { data } = await axios.get(
-          "http://127.0.0.1:5000/api/advisor/logs",
+          `${API_URL}/api/advisor/logs`,
           {
             params: { advisor_email: email, search: searchTerm, status: statusFilter },
           }
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
 
     try {
       setLoading(true);
-      const response = await axios.get(`http://127.0.0.1:5000/api/get_summary/${studentEmail}`);
+      const response = await axios.get(`${API_URL}/api/get_summary/${studentEmail}`);
       setProfileData(response.data);
       setIsProfileVisible(true);
     } catch (err) {
@@ -90,7 +90,7 @@ const AdminDashboard = () => {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/appointment/status/${id}`, {
+      await axios.put(`${API_URL}/api/appointment/status/${id}`, {
         status: newStatus,
       });
       setAppointments(appointments.map((appt) => (appt._id === id ? { ...appt, status: newStatus } : appt)));
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
         ? `/api/appointment/confirm/${id}`
         : `/api/${type}/${id}`;
 
-      await axios.put(`http://127.0.0.1:5000${endpoint}`, {
+      await axios.put(`${API_URL}${endpoint}`, {
         status: newStatus,
         reviewed_by: email,
       });
@@ -122,7 +122,7 @@ const AdminDashboard = () => {
 
   const handleVenueChange = async (id, newVenue) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/appointment/venue/${id}`, {
+      await axios.put(`${API_URL}/api/appointment/venue/${id}`, {
         venue: newVenue,
       });
       setAppointments(appointments.map((appt) => (appt._id === id ? { ...appt, venue: newVenue } : appt)));
