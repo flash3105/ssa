@@ -5,6 +5,7 @@ import "./Bookings.css"; // Add your styling here
 
 
 const Bookings = () => {
+    const API_URL = "https://ssa-fyk5.onrender.com";
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     const [availableTimes, setAvailableTimes] = useState([
@@ -53,7 +54,7 @@ const Bookings = () => {
         };
 
         try {
-            const response = await axios.post("http://127.0.0.1:5000/api/log", bookingLog);
+            const response = await axios.post(`${API_URL}/api/log`, bookingLog);
             setSuccessMessage("Booking successful! Thank you.");
             setErrorMessage("");
             console.log("Booking logged:", response.data);
