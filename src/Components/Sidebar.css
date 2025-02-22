@@ -1,48 +1,63 @@
 .sidebar {
     width: 250px;
     height: 100vh;
-    background: #2c3e50;
-    color: white;
+    background-color: #2c3e50; /* Dark blue background */
+    color: #fff;
+    box-shadow: 2px 0 8px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
-    position: fixed;
-    left: 0;
-    top: 0;
-}
-
-.logo {
-    font-size: 24px;
+    border-bottom: 1px solid #002140;
+  }
+  
+  .login-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .logo {
+    font-size: 18px;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.sidebar ul {
-    list-style-type: none;
+    color: #fff;
+  }
+  
+  .sidebar-menu {
+    list-style: none;
     padding: 0;
-}
-
-.sidebar ul li {
-    padding: 10px;
-    margin: 10px 0;
-}
-
-.sidebar ul li a {
-    color: white;
+    margin: 0;
+  }
+  
+  .sidebar-menu li {
+    padding: 12px 20px;
+    transition: background-color 0.3s;
+  }
+  
+  .sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    color: #fff;
     text-decoration: none;
-    display: block;
-}
-
-.sidebar ul li a:hover {
-    background: #34495e;
-    border-radius: 5px;
-}
-.sidebar img {
-    width: 100px; /* Adjust as needed */
-    height: auto;
-    display: block;
-    margin: 0 auto 20px;
-    border-radius: 50%; /* Makes it circular */
-    border: 2px solid white; /* Optional: adds a white border */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: adds a subtle shadow */
-}
-
+  }
+  
+  .sidebar-menu li a:hover {
+    color: #1890ff; /* Light blue hover color */
+  }
+  
+  .sidebar-menu li.selected {
+    background-color: #1890ff; /* Light blue selected background */
+  }
+  
+  .sidebar-menu li.selected a {
+    color: #fff;
+  }
+  
+  .menu-icon {
+    font-size: 18px;
+    margin-right: 10px;
+  }
