@@ -11,11 +11,12 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const API_URL = "https://ssa-fyk5.onrender.com";
+    const API2 = "https://studenthub-b302.onrender.com"
     //const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:5000';
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${API_URL}/api/login`, {
+            const response = await axios.post(`${API2}/api/login`, {
                 email,
                 password,
             });
