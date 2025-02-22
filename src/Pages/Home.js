@@ -20,6 +20,7 @@ import './Home.css';
 import AnalogClock from '../Components/AnalogClock';
 import FeedbackForm from '../Components/Feedback';
 const Home = () => {
+    const API_URL = "https://ssa-fyk5.onrender.com";
     const name = localStorage.getItem('name');
     const studentNo = localStorage.getItem('studentNo');
     const email = localStorage.getItem('email');
@@ -75,7 +76,7 @@ const Home = () => {
             try {
                 setLoading(true); 
 
-                const { data } = await axios.get('http://127.0.0.1:5000/api/student/logs', {
+                const { data } = await axios.get(`${API_URL}/api/student/logs`, {
                     params: { email: email}
                 });
                 console.log(data);
@@ -166,7 +167,7 @@ const Home = () => {
                 throw new Error("Summary ID missing. Unable to save.");
             }
 
-            const response = await fetch(`http://127.0.0.1:5000/surveysave/${summary.id}`, {
+            const response = await fetch(`{API_URL}/surveysave/${summary.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
