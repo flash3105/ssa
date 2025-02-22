@@ -67,3 +67,26 @@
   .ant-form {
     animation: fadeIn 0.5s ease-in-out;
   }
+  .resources-container {
+    display: flex;
+  }
+  
+  .resources-content {
+    margin-left: 280px; /* Adjust this value to match the width of your sidebar */
+    padding: 20px;
+    max-width: 1200px; /* Adjust this value to control the maximum width of the content */
+    width: 100%;
+  }
+  
+  /* Additional styles for the tabs and content */
+  .ant-tabs {
+    margin-top: 20px;
+  }
+  
+  .ant-tabs-tabpane {
+    padding: 20px 0;
+  }
+  
+  .ant-list {
+    margin-top: 20px;
+  }
