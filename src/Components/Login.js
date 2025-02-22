@@ -49,7 +49,7 @@ const Login = () => {
  // Function to fetch survey summary after login
 const fetchSurveySummary = async (studentNo, token) => {
     try {
-        const response = await axios.get(`http://127.0.0.1:5000/api/get_summary/${studentNo}`, {
+        const response = await axios.get(`${API_URL}/api/get_summary/${studentNo}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
 
