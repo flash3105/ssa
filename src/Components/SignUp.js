@@ -4,6 +4,7 @@ import './SignUp.css';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+    const API_URL = "https://ssa-fyk5.onrender.com";
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [studentNo, setStudentNo] = useState('');
@@ -51,7 +52,7 @@ const SignUp = () => {
                 userData.subject = selectedCourse;
             }
 
-            await axios.post('http://127.0.0.1:5000/api/register', userData);
+            await axios.post(`${API_URL}/api/register`, userData);
 
             localStorage.setItem('name', name);
             localStorage.setItem('department', department);
