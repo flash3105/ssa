@@ -53,7 +53,7 @@ const AcademicChallenge = () => {
         setSelectedModule(module);
         localStorage.setItem("selectedModule", module);
 
-        axios.get(`{API_URL}/api/resources/${module}`)
+        axios.get(`${API_URL}/api/resources/${module}`)
             .then((response) => {
                 setResources(response.data.resources || []);
             })
