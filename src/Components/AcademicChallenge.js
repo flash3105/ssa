@@ -171,7 +171,7 @@ const AcademicChallenge = () => {
                                         {/* Show Preview for PDFs */}
                                         {resource.file_path && resource.file_path.endsWith(".pdf") && (
                                             <iframe
-                                                src={`http://127.0.0.1:5000/${resource.file_path}`}
+                                                src={`${API_URL}/${resource.file_path}`}
                                                 style={{
                                                     width: "100%",
                                                     height: "300px",
@@ -185,7 +185,7 @@ const AcademicChallenge = () => {
                                         {/* Download Link */}
                                         {resource.file_path && (
                                             <a
-                                                href={`http://127.0.0.1:5000/${resource.file_path}`}
+                                                href={`${API_URL}/${resource.file_path}`}
                                                 download
                                                 target="_blank"
                                                 rel="noopener noreferrer"
