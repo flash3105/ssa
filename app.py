@@ -32,6 +32,11 @@ users_collection = db["users"]
 collection = db["resources"]
 # JWT Secret Key for creating JWT tokens
 JWT_SECRET = os.getenv("JWT_SECRET", "your_jwt_secret_key")
+#ping the server 
+
+@app.route("/")
+def home():
+    return "Server is running!"
 
 def convert_objectid_to_str(obj):
     if isinstance(obj, ObjectId):
