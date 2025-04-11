@@ -51,11 +51,11 @@ const Sidebar = ({ studentNumber }) => {
             <span>Home</span>
           </Link>
         </li>
-       /* <li className={getSelectedKey() === '2' ? 'selected' : ''}>
-          <Link to="/bookings">
+        <li className={getSelectedKey() === '2' ? 'selected' : ''}>
+          <Link to="/#">
             <CalendarOutlined className="menu-icon" />
             <span>Bookings</span>
-          </Link>*/
+          </Link>
         </li>
         <li className={getSelectedKey() === '3' ? 'selected' : ''}>
           <Link to="/analytics">
